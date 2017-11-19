@@ -29,49 +29,58 @@ class player():
     def setFace(self, obj):
         self.face = obj
 
-def draw(background, x, y, face, toggle):
+
+def grid(background, size):
+    biggrid = [[], []]
+    for blockX in range(size * 2):
+        for blockY in range(size * 2):
+            pygame.rect.Rect(blockX * 20, blockY * 20, size * 2, size * 2)
+
+def draw(background, x, y, face, toggle, rad):
     if face == 1:
-        x1 = x + 9
-        y1 = y - 13
-        x2 = x - 9
-        y2 = y - 13
+        x1 = x + rad -2
+        y1 = y - rad
+        x2 = x - rad -2
+        y2 = y - rad
     elif face == 2:
-        x1 = x - 13
-        y1 = y + 9
-        x2 = x - 13
-        y2 = y - 9
+        x1 = x - rad
+        y1 = y + rad -2
+        x2 = x - rad
+        y2 = y - rad -2
     elif face == 3:
-        x1 = x + 9
-        y1 = y + 13
-        x2 = x - 9
-        y2 = y + 13
+        x1 = x + rad -2
+        y1 = y + rad
+        x2 = x - rad -2
+        y2 = y + rad
     elif face == 4:
-        x1 = x + 13
-        y1 = y + 9
-        x2 = x + 13
-        y2 = y - 9
+        x1 = x + rad
+        y1 = y + rad -2
+        x2 = x + rad
+        y2 = y - rad -2
 
-    pygame.draw.circle(background, (255, 255, 0), (x, y), 12)
-    if  toggle:
-        pygame.draw.polygon(background, (0, 0, 0), [[x, y], [x1, y1], [x2, y2]])
+    grid(background, rad)
+    pygame.draw.circle(background, (255, 255, 0), (x, y), rad)
+    #if  toggle:
+        #pygame.draw.polygon(background, (0, 0, 0), [[x, y], [x1, y1], [x2, y2]])
 
 
-def window():
+def window(size):
     # Initialise screen
-    YELLOW = (255, 255, 0)
-    RAD = 12
-
     pygame.init()
-    screen = pygame.display.set_mode((400, 400))
+    screen = pygame.display.set_mode((40 * size, 40 * size))
     pygame.display.set_caption('PACMAN')
 
+
+    myrect = pygame.rect.Rect(40, 40, 70, 70)
     #Fill background
     background = pygame.Surface(screen.get_size())
-    #background.fill((255, 255, 255))
+
+    #grid(background, size)
+
+    pygame.draw.rect(background, (255, 0, 0), myrect)
 
     player1 = player()
-    draw(background, player1.getX(), player1.getY(), 1, True)
-    #pygame.draw.polygon(background, YELLOW, [[100, 100], [100, 400], [400, 300]])
+    draw(background, player1.getX(), player1.getY(), 1, True, size)
 
     # Blit everything to the screen
     screen.blit(background, (0, 0))
@@ -81,6 +90,9 @@ def window():
     manim = 0
     toggle = True
     while True:
+        if manim == 100:
+            manim = 0
+
         '''pygame.mixer.init()
         if not pygame.mixer.music.get_busy():
             pygame.mixer.music.load("chomp.mp3")
@@ -89,7 +101,7 @@ def window():
         keys = pygame.key.get_pressed()
         if keys[pygame.K_w] or keys[pygame.K_UP]:
             y = player1.getY()
-            if player1.getY() > 12:
+            if player1.getY() > size:
                 player1.setY(y - 1)
             time.sleep(0.002)
             background.fill((0, 0, 0))
@@ -97,21 +109,21 @@ def window():
             if manim % 50 == 0:
                 print("entered" + str(toggle))
                 toggle = not toggle
-            draw(background, player1.getX(), player1.getY(), 1, toggle)
+            draw(background, player1.getX(), player1.getY(), 1, toggle, size)
         elif keys[pygame.K_a] or keys[pygame.K_LEFT]:
             x = player1.getX()
             manim += 1
-            if player1.getX() > 12:
+            if player1.getX() > size:
                 player1.setX(x - 1)
             time.sleep(0.002)
             background.fill((0, 0, 0))
             if manim % 50 == 0:
                 print("entered" + str(toggle))
                 toggle = not toggle
-            draw(background, player1.getX(), player1.getY(), 2, toggle)
+            draw(background, player1.getX(), player1.getY(), 2, toggle, size)
         elif keys[pygame.K_s] or keys[pygame.K_DOWN]:
             y = player1.getY()
-            if player1.getY() < 388:
+            if player1.getY() < background.get_height() - size:
                 player1.setY(y + 1)
             time.sleep(0.002)
             background.fill((0, 0, 0))
@@ -119,10 +131,10 @@ def window():
             if manim % 50 == 0:
                 print("entered" + str(toggle))
                 toggle = not toggle
-            draw(background, player1.getX(), player1.getY(), 3, toggle)
+            draw(background, player1.getX(), player1.getY(), 3, toggle, size)
         elif keys[pygame.K_d] or keys[pygame.K_RIGHT]:
             x = player1.getX()
-            if player1.getX() < 388:
+            if player1.getX() < background.get_width() - size:
                 player1.setX(x + 1)
             time.sleep(0.002)
             background.fill((0, 0, 0))
@@ -130,7 +142,7 @@ def window():
             if manim % 50 == 0:
                 print("entered" + str(toggle))
                 toggle = not toggle
-            draw(background, player1.getX(), player1.getY(), 4, toggle)
+            draw(background, player1.getX(), player1.getY(), 4, toggle, size)
         #pygame.mixer.pause()
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -149,4 +161,5 @@ def window():
 ############### MAIN ###############
 ####################################
 
-window()
+size = 10
+window(size)
