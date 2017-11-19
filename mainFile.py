@@ -5,7 +5,7 @@ import time
 
 class player():
 
-    def __init__(self, xloc=200, yloc=350, face=1, god=False):
+    def __init__(self, xloc=210, yloc=350, face=1, god=False):
         self.xloc = xloc
         self.yloc = yloc
         self.face = face
@@ -31,11 +31,15 @@ class player():
 
 
 def grid(background, size):
-    biggrid = [[], []]
-    for blockX in range(size * 2):
-        for blockY in range(size * 2):
-            pygame.rect.Rect(blockX * 20, blockY * 20, size * 2, size * 2)
+    biggrid = [[0] * 21 for n in range(21)]
+    for row in range(21):
+        for col in range(21):
+            biggrid[row][col] = pygame.rect.Rect(row * 20, col * 20, size * 2, size * 2)
 
+    for row in range(21):
+        for col in range(21):
+            pygame.draw.rect(background, (row * 10, col * 10, 0), biggrid[row][col])
+            #print(biggrid[row][col])
 def draw(background, x, y, face, toggle, rad):
     if face == 1:
         x1 = x + rad -2
@@ -67,7 +71,7 @@ def draw(background, x, y, face, toggle, rad):
 def window(size):
     # Initialise screen
     pygame.init()
-    screen = pygame.display.set_mode((40 * size, 40 * size))
+    screen = pygame.display.set_mode((int(42 * size), 40 * size))
     pygame.display.set_caption('PACMAN')
 
 
@@ -102,8 +106,8 @@ def window(size):
         if keys[pygame.K_w] or keys[pygame.K_UP]:
             y = player1.getY()
             if player1.getY() > size:
-                player1.setY(y - 1)
-            time.sleep(0.002)
+                player1.setY(y - size*2)
+            time.sleep(0.04)
             background.fill((0, 0, 0))
             manim += 1
             if manim % 50 == 0:
@@ -114,8 +118,8 @@ def window(size):
             x = player1.getX()
             manim += 1
             if player1.getX() > size:
-                player1.setX(x - 1)
-            time.sleep(0.002)
+                player1.setX(x - size*2)
+            time.sleep(0.04)
             background.fill((0, 0, 0))
             if manim % 50 == 0:
                 print("entered" + str(toggle))
@@ -124,8 +128,8 @@ def window(size):
         elif keys[pygame.K_s] or keys[pygame.K_DOWN]:
             y = player1.getY()
             if player1.getY() < background.get_height() - size:
-                player1.setY(y + 1)
-            time.sleep(0.002)
+                player1.setY(y + size*2)
+            time.sleep(0.04)
             background.fill((0, 0, 0))
             manim += 1
             if manim % 50 == 0:
@@ -135,8 +139,8 @@ def window(size):
         elif keys[pygame.K_d] or keys[pygame.K_RIGHT]:
             x = player1.getX()
             if player1.getX() < background.get_width() - size:
-                player1.setX(x + 1)
-            time.sleep(0.002)
+                player1.setX(x + size*2)
+            time.sleep(0.04)
             background.fill((0, 0, 0))
             manim += 1
             if manim % 50 == 0:
