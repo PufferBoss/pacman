@@ -30,16 +30,47 @@ class player():
         self.face = obj
 
 
-def grid(background, size):
-    biggrid = [[0] * 21 for n in range(21)]
-    for row in range(21):
-        for col in range(21):
+def grid(background, size, needs):
+    o = (0, 0, 0)
+    w = (0, 0, 255)
+    biggrid = [[0] * 24 for n in range(19)]
+    for row in range(19):
+        for col in range(24):
             biggrid[row][col] = pygame.rect.Rect(row * 20, col * 20, size * 2, size * 2)
 
-    for row in range(21):
-        for col in range(21):
-            pygame.draw.rect(background, (row * 10, col * 10, 0), biggrid[row][col])
-            #print(biggrid[row][col])
+    rgbgrid = [[w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w],
+               [w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
+               [w, o, w, w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
+               [w, o, w, w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
+               [w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
+               [w, o, w, w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
+               [w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
+               [w, w, w, w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
+               [o, o, o, w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
+               [o, o, o, w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
+               [w, w, w, w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
+               [o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
+               [w, w, w, w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
+               [o, o, o, w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
+               [o, o, o, w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
+               [w, w, w, w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
+               [w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
+               [w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
+               [w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
+               [w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
+               [w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
+               [w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
+               [w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
+               [w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w]]
+
+    for row in range(19):
+        for col in range(24):
+            pygame.draw.rect(background, rgbgrid[col][row], biggrid[row][col])
+
+    if needs:
+        return rgbgrid
+
+
 def draw(background, x, y, face, toggle, rad):
     if face == 1:
         x1 = x + rad -2
@@ -62,26 +93,28 @@ def draw(background, x, y, face, toggle, rad):
         x2 = x + rad
         y2 = y - rad -2
 
-    grid(background, rad)
+    grid(background, rad, False)
     pygame.draw.circle(background, (255, 255, 0), (x, y), rad)
     #if  toggle:
         #pygame.draw.polygon(background, (0, 0, 0), [[x, y], [x1, y1], [x2, y2]])
 
 
+def collide(background, x, y):
+    rgbgrid = grid(background, size, True)
+    print(rgbgrid)
+
 def window(size):
     # Initialise screen
     pygame.init()
-    screen = pygame.display.set_mode((int(42 * size), 40 * size))
+    screen = pygame.display.set_mode((int(38 * size), 48 * size))
     pygame.display.set_caption('PACMAN')
 
 
-    myrect = pygame.rect.Rect(40, 40, 70, 70)
     #Fill background
     background = pygame.Surface(screen.get_size())
 
     #grid(background, size)
-
-    pygame.draw.rect(background, (255, 0, 0), myrect)
+    collide(background, 0, 0)
 
     player1 = player()
     draw(background, player1.getX(), player1.getY(), 1, True, size)
