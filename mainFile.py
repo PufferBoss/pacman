@@ -67,8 +67,12 @@ def grid(background, size, needs):
         for col in range(24):
             pygame.draw.rect(background, rgbgrid[col][row], biggrid[row][col])
 
+    '''for row in range(19):
+        for col in range(24):
+            pygame.draw.rect(background, (row*10, col*10, 100), biggrid[row][col])'''
+
     if needs:
-        return rgbgrid
+        return (rgbgrid, biggrid)
 
 
 def draw(background, x, y, face, toggle, rad):
@@ -95,13 +99,34 @@ def draw(background, x, y, face, toggle, rad):
 
     grid(background, rad, False)
     pygame.draw.circle(background, (255, 255, 0), (x, y), rad)
-    #if  toggle:
-        #pygame.draw.polygon(background, (0, 0, 0), [[x, y], [x1, y1], [x2, y2]])
+    if  toggle:
+        pygame.draw.polygon(background, (0, 0, 0), [[x, y], [x1, y1], [x2, y2]])
 
 
 def collide(background, x, y):
-    rgbgrid = grid(background, size, True)
-    print(rgbgrid)
+    rgbgrid = grid(background, size, True)[0]
+    biggrid = grid(background, size, True)[1]
+    for row in range(19):
+        for col in range(24):
+            if rgbgrid[col][row] == (0, 0, 255):
+                biggrid[row][col] = (biggrid[row][col].left, biggrid[row][col].top)
+            else:
+
+    up = (x, y - 20)
+    dn = (x, y + 20)
+    lft = (x - 20, y)
+    rt = (x + 20, y)
+    print(biggrid)
+    '''works = []
+    if up in biggrid:
+        works.append(up)
+    if dn in biggrid:
+        works.append(dn)
+    if lft in biggrid:
+        works.append(lft)
+    if rt in biggrid:
+        works.append(rt)
+    return works'''
 
 def window(size):
     # Initialise screen
@@ -127,7 +152,7 @@ def window(size):
     manim = 0
     toggle = True
     while True:
-        if manim == 100:
+        if manim == 6:
             manim = 0
 
         '''pygame.mixer.init()
@@ -139,11 +164,11 @@ def window(size):
         if keys[pygame.K_w] or keys[pygame.K_UP]:
             y = player1.getY()
             if player1.getY() > size:
-                player1.setY(y - size*2)
-            time.sleep(0.04)
+                player1.setY(y - size)
+            time.sleep(0.02)
             background.fill((0, 0, 0))
             manim += 1
-            if manim % 50 == 0:
+            if manim % 3 == 0:
                 print("entered" + str(toggle))
                 toggle = not toggle
             draw(background, player1.getX(), player1.getY(), 1, toggle, size)
@@ -151,32 +176,32 @@ def window(size):
             x = player1.getX()
             manim += 1
             if player1.getX() > size:
-                player1.setX(x - size*2)
-            time.sleep(0.04)
+                player1.setX(x - size)
+            time.sleep(0.02)
             background.fill((0, 0, 0))
-            if manim % 50 == 0:
+            if manim % 3 == 0:
                 print("entered" + str(toggle))
                 toggle = not toggle
             draw(background, player1.getX(), player1.getY(), 2, toggle, size)
         elif keys[pygame.K_s] or keys[pygame.K_DOWN]:
             y = player1.getY()
             if player1.getY() < background.get_height() - size:
-                player1.setY(y + size*2)
-            time.sleep(0.04)
+                player1.setY(y + size)
+                time.sleep(0.02)
             background.fill((0, 0, 0))
             manim += 1
-            if manim % 50 == 0:
+            if manim % 3 == 0:
                 print("entered" + str(toggle))
                 toggle = not toggle
             draw(background, player1.getX(), player1.getY(), 3, toggle, size)
         elif keys[pygame.K_d] or keys[pygame.K_RIGHT]:
             x = player1.getX()
             if player1.getX() < background.get_width() - size:
-                player1.setX(x + size*2)
-            time.sleep(0.04)
+                player1.setX(x + size)
+            time.sleep(0.02)
             background.fill((0, 0, 0))
             manim += 1
-            if manim % 50 == 0:
+            if manim % 3 == 0:
                 print("entered" + str(toggle))
                 toggle = not toggle
             draw(background, player1.getX(), player1.getY(), 4, toggle, size)
