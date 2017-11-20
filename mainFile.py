@@ -128,7 +128,7 @@ def collide(background, x, y):                 #returns an array consisting of t
     return works'''
 
 def window(size):
-    # Initialise screen
+    # initialise screen
     pygame.init()
     screen = pygame.display.set_mode((int(38 * size), 48 * size))
     pygame.display.set_caption('PACMAN')
