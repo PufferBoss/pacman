@@ -3,7 +3,7 @@ from pygame.locals import *
 import time
 
 
-class player():
+class player():      #player class is pacman himself
 
     def __init__(self, xloc=210, yloc=350, face=1, god=False):
         self.xloc = xloc
@@ -36,7 +36,7 @@ def grid(background, size, needs):
     biggrid = [[0] * 24 for n in range(19)]
     for row in range(19):
         for col in range(24):
-            biggrid[row][col] = pygame.rect.Rect(row * 20, col * 20, size * 2, size * 2)
+            biggrid[row][col] = pygame.rect.Rect(row * 20, col * 20, size * 2, size * 2)    #creates the grid but doesnt draw it. rect obejct can be toyed with
 
     rgbgrid = [[w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w],
                [w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
@@ -53,7 +53,7 @@ def grid(background, size, needs):
                [w, w, w, w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
                [o, o, o, w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
                [o, o, o, w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
-               [w, w, w, w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
+               [w, w, w, w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],                #the map represented in text. should try and make this hidden and used as hitboxes
                [w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
                [w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
                [w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
@@ -65,7 +65,7 @@ def grid(background, size, needs):
 
     for row in range(19):
         for col in range(24):
-            pygame.draw.rect(background, rgbgrid[col][row], biggrid[row][col])
+            pygame.draw.rect(background, rgbgrid[col][row], biggrid[row][col])          #draws the rects, data can not be collected
 
     '''for row in range(19):
         for col in range(24):
@@ -86,7 +86,7 @@ def draw(background, x, y, face, toggle, rad):
         y1 = y + rad -2
         x2 = x - rad
         y2 = y - rad -2
-    elif face == 3:
+    elif face == 3:                  #face represents the 4 different poses
         x1 = x + rad -2
         y1 = y + rad
         x2 = x - rad -2
@@ -98,19 +98,18 @@ def draw(background, x, y, face, toggle, rad):
         y2 = y - rad -2
 
     grid(background, rad, False)
-    pygame.draw.circle(background, (255, 255, 0), (x, y), rad)
+    pygame.draw.circle(background, (255, 255, 0), (x, y), rad)         #draws the circle
     if  toggle:
-        pygame.draw.polygon(background, (0, 0, 0), [[x, y], [x1, y1], [x2, y2]])
+        pygame.draw.polygon(background, (0, 0, 0), [[x, y], [x1, y1], [x2, y2]])       #does it draw the triangle or not
 
 
-def collide(background, x, y):
+def collide(background, x, y):                 #returns an array consisting of the possible movements the player can make
     rgbgrid = grid(background, size, True)[0]
     biggrid = grid(background, size, True)[1]
     for row in range(19):
         for col in range(24):
             if rgbgrid[col][row] == (0, 0, 255):
-                biggrid[row][col] = (biggrid[row][col].left, biggrid[row][col].top)
-            else:
+                biggrid[row][col] = (biggrid[row][col].left, biggrid[row][col].top)       #stopped here
 
     up = (x, y - 20)
     dn = (x, y + 20)
@@ -133,10 +132,8 @@ def window(size):
     pygame.init()
     screen = pygame.display.set_mode((int(38 * size), 48 * size))
     pygame.display.set_caption('PACMAN')
-
-
-    #Fill background
     background = pygame.Surface(screen.get_size())
+
 
     #grid(background, size)
     collide(background, 0, 0)
@@ -147,6 +144,8 @@ def window(size):
     # Blit everything to the screen
     screen.blit(background, (0, 0))
     pygame.display.flip()
+
+
 
     # Event loop
     manim = 0
@@ -161,7 +160,7 @@ def window(size):
             pygame.mixer.music.play()'''
 
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_w] or keys[pygame.K_UP]:
+        if keys[pygame.K_w] or keys[pygame.K_UP]:             #all the key presses
             y = player1.getY()
             if player1.getY() > size:
                 player1.setY(y - size)
