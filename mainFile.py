@@ -100,7 +100,7 @@ def draw(background, x, y, face, toggle, rad):
         y2 = y - rad -2
 
     grid(background, rad, False)
-    pygame.draw.circle(background, (255, 255, 0), (x, y), rad)         #draws the circle
+    pygame.draw.circle(background, (255, 255, 0), (x, y), rad)         #draws circle
     if  toggle:
         pygame.draw.polygon(background, (0, 0, 0), [[x, y], [x1, y1], [x2, y2]])       #does it draw the triangle or not
 
