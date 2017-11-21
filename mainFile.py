@@ -5,7 +5,7 @@ import time
 
 class player():      #player class is pacman himself
 
-    def __init__(self, xloc=210, yloc=350, face=1, god=False):
+    def __init__(self, xloc=190, yloc=350, face=1, god=False):
         self.xloc = xloc
         self.yloc = yloc
         self.face = face
@@ -33,40 +33,42 @@ class player():      #player class is pacman himself
 def grid(background, size, needs):
     o = (0, 0, 0)
     w = (0, 0, 255)
+    t = (255, 0, 128)
+    r = (1, 1, 1)
     biggrid = [[0] * 24 for n in range(19)]
     for row in range(19):
         for col in range(24):
             biggrid[row][col] = pygame.rect.Rect(row * 20, col * 20, size * 2, size * 2)    #creates the grid but doesnt draw it. rect obejct can be toyed with
 
-    rgbgrid = [[w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w],
+    rgbgrid = [[o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o],
+               [w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w],
+               [w, o, o, o, o, o, o, o, o, w, o, o, o, o, o, o, o, o, w],
+               [w, o, w, w, o, w, w, w, o, w, o, w, w, w, o, w, w, o, w],
                [w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
-               [w, o, w, w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
-               [w, o, w, w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
-               [w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
-               [w, o, w, w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
-               [w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
-               [w, w, w, w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
-               [o, o, o, w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
-               [o, o, o, w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
-               [w, w, w, w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
-               [o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
-               [w, w, w, w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
-               [o, o, o, w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
-               [o, o, o, w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
-               [w, w, w, w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],                #the map represented in text. should try and make this hidden and used as hitboxes
-               [w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
-               [w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
-               [w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
-               [w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
-               [w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
-               [w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
+               [w, o, w, w, o, w, o, w, w, w, w, w, o, w, o, w, w, o, w],
+               [w, o, o, o, o, w, o, o, o, w, o, o, o, w, o, o, o, o, w],
+               [w, w, w, w, o, w, w, w, o, w, o, w, w, w, o, w, w, w, w],
+               [o, o, o, w, o, w, o, o, o, o, o, o, o, w, o, w, o, o, o],
+               [o, o, o, w, o, w, o, w, w, t, w, w, o, w, o, w, o, o, o],
+               [w, w, w, w, o, w, o, w, o, o, o, w, o, w, o, w, w, w, w],
+               [o, o, o, o, o, o, o, w, o, o, o, w, o, o, o, o, o, o, o],
+               [w, w, w, w, o, w, o, w, o, o, o, w, o, w, o, w, w, w, w],
+               [o, o, o, w, o, w, o, w, w, w, w, w, o, w, o, w, o, o, o],
+               [o, o, o, w, o, w, o, o, o, o, o, o, o, w, o, w, o, o, o],
+               [w, w, w, w, o, w, o, w, w, w, w, w, o, w, o, w, w, w, w],                #the map represented in text. should try and make this hidden and used as hitboxes
+               [w, o, o, o, o, o, o, o, o, w, o, o, o, o, o, o, o, o, w],
+               [w, o, w, w, o, w, w, w, o, w, o, w, w, w, o, w, w, o, w],
+               [w, o, o, w, o, o, o, o, o, o, o, o, o, o, o, w, o, o, w],
+               [w, w, o, w, o, w, o, w, w, w, w, w, o, w, o, w, o, w, w],
+               [w, o, o, o, o, w, o, o, o, w, o, o, o, w, o, o, o, o, w],
+               [w, o, w, w, w, w, w, w, o, w, o, w, w, w, w, w, w, o, w],
                [w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
                [w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w]]
 
     for row in range(19):
         for col in range(24):
             pygame.draw.rect(background, rgbgrid[col][row], biggrid[row][col])          #draws the rects, data can not be collected
-
+    #background.fill((0, 0, 0))
     '''for row in range(19):
         for col in range(24):
             pygame.draw.rect(background, (row*10, col*10, 100), biggrid[row][col])'''
@@ -103,29 +105,37 @@ def draw(background, x, y, face, toggle, rad):
         pygame.draw.polygon(background, (0, 0, 0), [[x, y], [x1, y1], [x2, y2]])       #does it draw the triangle or not
 
 
-def collide(background, x, y):                 #returns an array consisting of the possible movements the player can make
+def collide(background, x, y):                 #returns array consisting of the possible movements the player can make
     rgbgrid = grid(background, size, True)[0]
     biggrid = grid(background, size, True)[1]
+    coordgrid = []
     for row in range(19):
         for col in range(24):
-            if rgbgrid[col][row] == (0, 0, 255):
-                biggrid[row][col] = (biggrid[row][col].left, biggrid[row][col].top)       #stopped here
+            if rgbgrid[col][row] == (0, 0, 0):
+                coord = [biggrid[row][col].left, biggrid[row][col].top]
+                coordgrid.append(coord)
+    up = [x - 10, y - 30]
+    up2 = [x - 10, y - 20]
 
-    up = (x, y - 20)
-    dn = (x, y + 20)
-    lft = (x - 20, y)
-    rt = (x + 20, y)
-    print(biggrid)
-    '''works = []
-    if up in biggrid:
-        works.append(up)
-    if dn in biggrid:
-        works.append(dn)
-    if lft in biggrid:
-        works.append(lft)
-    if rt in biggrid:
-        works.append(rt)
-    return works'''
+    dn = [x - 10, y + 10]
+    dn2 = [x - 10, y]
+
+    lft = [x - 30, y - 10]
+    lft2 = [x - 20, y - 10]
+
+    rt = [x + 10, y - 10]
+    rt2 = [x, y - 10]
+    works = []
+    if up in coordgrid or up2 in coordgrid:
+        works.append("up")
+    if dn in coordgrid or dn2 in coordgrid:
+        works.append("dn")
+    if lft in coordgrid or lft2 in coordgrid:
+        works.append("lft")
+    if rt in coordgrid or rt2 in coordgrid:
+        works.append("rt")
+    print(works)
+    return works
 
 def window(size):
     # initialise screen
@@ -162,48 +172,60 @@ def window(size):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_w] or keys[pygame.K_UP]:             #all the key presses
             y = player1.getY()
-            if player1.getY() > size:
+            x = player1.getX()
+            if "up" in collide(background, x, y):
                 player1.setY(y - size)
-            time.sleep(0.02)
+            time.sleep(0.04)
             background.fill((0, 0, 0))
             manim += 1
             if manim % 3 == 0:
                 print("entered" + str(toggle))
                 toggle = not toggle
             draw(background, player1.getX(), player1.getY(), 1, toggle, size)
+
         elif keys[pygame.K_a] or keys[pygame.K_LEFT]:
+            y = player1.getY()
             x = player1.getX()
+            if x == 10 and y == 230:
+                player1.setX(360)
             manim += 1
-            if player1.getX() > size:
+            if "lft" in collide(background, x, y):
                 player1.setX(x - size)
-            time.sleep(0.02)
+            time.sleep(0.04)
             background.fill((0, 0, 0))
             if manim % 3 == 0:
                 print("entered" + str(toggle))
                 toggle = not toggle
             draw(background, player1.getX(), player1.getY(), 2, toggle, size)
+
         elif keys[pygame.K_s] or keys[pygame.K_DOWN]:
             y = player1.getY()
-            if player1.getY() < background.get_height() - size:
+            x = player1.getX()
+            if "dn" in collide(background, x, y):
                 player1.setY(y + size)
-                time.sleep(0.02)
+                time.sleep(0.04)
             background.fill((0, 0, 0))
             manim += 1
             if manim % 3 == 0:
                 print("entered" + str(toggle))
                 toggle = not toggle
             draw(background, player1.getX(), player1.getY(), 3, toggle, size)
+
         elif keys[pygame.K_d] or keys[pygame.K_RIGHT]:
+            y = player1.getY()
             x = player1.getX()
-            if player1.getX() < background.get_width() - size:
+            if x == 370 and y == 230:
+                player1.setX(10)
+            if "rt" in collide(background, x, y):
                 player1.setX(x + size)
-            time.sleep(0.02)
+            time.sleep(0.04)
             background.fill((0, 0, 0))
             manim += 1
             if manim % 3 == 0:
                 print("entered" + str(toggle))
                 toggle = not toggle
             draw(background, player1.getX(), player1.getY(), 4, toggle, size)
+
         #pygame.mixer.pause()
         for event in pygame.event.get():
             if event.type == QUIT:
