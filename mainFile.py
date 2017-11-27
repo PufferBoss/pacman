@@ -77,7 +77,12 @@ def grid(background, size, needs):
         return (rgbgrid, biggrid)
 
 
-def draw(background, x, y, face, toggle, rad):
+
+def draw(background, player1, toggle, rad):
+    x = player1.getX()
+    y = player1.getY()
+    face = player1.getFace()
+
     if face == 1:
         x1 = x + rad -2
         y1 = y - rad
@@ -137,6 +142,27 @@ def collide(background, x, y):                 #returns array consisting of the 
     print(works)
     return works
 
+def move(background, player1, direct, size):
+    y = player1.getY()
+    x = player1.getX()
+
+    if direct in collide(background, x, y):
+        if direct == "up":
+            player1.setY(y - size)
+            player1.setFace(1)
+        elif direct == "dn":
+            player1.setY(y + size)
+            player1.setFace(3)
+        elif direct == "lft":
+            player1.setX(x - size)
+            player1.setFace(2)
+        elif direct == "rt":
+            player1.setX(x + size)
+            player1.setFace(4)
+    time.sleep(0.04)
+    background.fill((0, 0, 0))
+    return player1
+
 def window(size):
     # initialise screen
     pygame.init()
@@ -149,13 +175,11 @@ def window(size):
     collide(background, 0, 0)
 
     player1 = player()
-    draw(background, player1.getX(), player1.getY(), 1, True, size)
+    draw(background, player1, True, size)
 
     # Blit everything to the screen
     screen.blit(background, (0, 0))
     pygame.display.flip()
-
-
 
     # Event loop
     manim = 0
@@ -169,7 +193,10 @@ def window(size):
             pygame.mixer.music.load("chomp.mp3")
             pygame.mixer.music.play()'''
 
-        keys = pygame.key.get_pressed()
+
+        '''WHILE PRESSED'''
+
+        '''keys = pygame.key.get_pressed()
         if keys[pygame.K_w] or keys[pygame.K_UP]:             #all the key presses
             y = player1.getY()
             x = player1.getX()
@@ -224,7 +251,7 @@ def window(size):
             if manim % 3 == 0:
                 print("entered" + str(toggle))
                 toggle = not toggle
-            draw(background, player1.getX(), player1.getY(), 4, toggle, size)
+            draw(background, player1.getX(), player1.getY(), 4, toggle, size)'''
 
         #pygame.mixer.pause()
         for event in pygame.event.get():
@@ -232,8 +259,47 @@ def window(size):
                 return
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_0:
-                    print(player1.getY())
+                    print("(" + str (player1.getX()) + ", " + str (player1.getY()) + ")")
 
+                if event.key == pygame.K_w or event.key == pygame.K_UP:
+                    player1 = move(background, player1, "up", size)
+                    manim += 1
+                    if manim % 3 == 0:
+                        print("entered" + str(toggle))
+                        toggle = not toggle
+                    draw(background, player1, toggle, size)
+
+                if event.key == pygame.K_a or event.key == pygame.K_LEFT:
+                    y = player1.getY()
+                    x = player1.getX()
+                    if x == 10 and y == 230:
+                        player1.setX(380)
+                    player1 = move(background, player1, "lft", size)
+                    manim += 1
+                    if manim % 3 == 0:
+                        print("entered" + str(toggle))
+                        toggle = not toggle
+                    draw(background, player1, toggle, size)
+
+                if event.key == pygame.K_s or event.key == pygame.K_DOWN:
+                    player1 = move(background, player1, "dn", size)
+                    manim += 1
+                    if manim % 3 == 0:
+                        print("entered" + str(toggle))
+                        toggle = not toggle
+                    draw(background, player1, toggle, size)
+
+                if event.key == pygame.K_d or event.key == pygame.K_RIGHT:
+                    y = player1.getY()
+                    x = player1.getX()
+                    if x == 370 and y == 230:
+                        player1.setX(0)
+                    player1 = move(background, player1, "rt", size)
+                    manim += 1
+                    if manim % 3 == 0:
+                        print("entered" + str(toggle))
+                        toggle = not toggle
+                    draw(background, player1, toggle, size)
 
         screen.blit(background, (0, 0))
         pygame.display.flip()
