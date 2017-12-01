@@ -138,7 +138,7 @@ def collide(background, x, y):                 #returns array consisting of the 
         works.append("lft")
     if rt in coordgrid or rt2 in coordgrid:
         works.append("rt")
-    print(works)
+    #print(works)
     return works
 
 def move(background, player1, direct, size):
@@ -158,7 +158,7 @@ def move(background, player1, direct, size):
         elif direct == "rt":
             player1.setX(x + size)
             player1.setFace(4)
-    time.sleep(0.04)
+    time.sleep(0.06)
     background.fill((0, 0, 0))
     return player1
 
@@ -261,7 +261,7 @@ def window(size):
                         slide = "dn"
 
                 elif event.key == pygame.K_d or event.key == pygame.K_RIGHT:
-                    if "rt" in group1 or "rt":
+                    if "rt" in group1:
                         slide = "rt"
 
 
@@ -310,4 +310,4 @@ def window(size):
 ####################################
 
 size = 10
-window(size)      
+window(size)
