@@ -5,7 +5,7 @@ import time
 
 class player():      #player class is pacman himself
 
-    def __init__(self, xloc=190, yloc=350, face=1, god=False):
+    def __init__(self, xloc=190, yloc=370, face=1, god=False):
         self.xloc = xloc
         self.yloc = yloc
         self.face = face
@@ -77,7 +77,11 @@ def grid(background, size, needs):
         return (rgbgrid, biggrid)
 
 
-def draw(background, x, y, face, toggle, rad):
+def draw(background, player1, toggle, rad):
+    x = player1.getX()
+    y = player1.getY()
+    face = player1.getFace()
+
     if face == 1:
         x1 = x + rad -2
         y1 = y - rad
@@ -134,8 +138,29 @@ def collide(background, x, y):                 #returns array consisting of the 
         works.append("lft")
     if rt in coordgrid or rt2 in coordgrid:
         works.append("rt")
-    print(works)
+    #print(works)
     return works
+
+def move(background, player1, direct, size):
+    y = player1.getY()
+    x = player1.getX()
+
+    if direct in collide(background, x, y):
+        if direct == "up":
+            player1.setY(y - size)
+            player1.setFace(1)
+        elif direct == "dn":
+            player1.setY(y + size)
+            player1.setFace(3)
+        elif direct == "lft":
+            player1.setX(x - size)
+            player1.setFace(2)
+        elif direct == "rt":
+            player1.setX(x + size)
+            player1.setFace(4)
+    time.sleep(0.06)
+    background.fill((0, 0, 0))
+    return player1
 
 def window(size):
     # initialise screen
@@ -149,95 +174,155 @@ def window(size):
     collide(background, 0, 0)
 
     player1 = player()
-    draw(background, player1.getX(), player1.getY(), 1, True, size)
+    draw(background, player1, True, size)
 
     # Blit everything to the screen
     screen.blit(background, (0, 0))
     pygame.display.flip()
 
-
-
     # Event loop
     manim = 0
     toggle = True
+    slide1 = ""
+    slide2 = ""
+    slide3 = ""
     while True:
         if manim == 6:
             manim = 0
 
-        '''pygame.mixer.init()
-        if not pygame.mixer.music.get_busy():
-            pygame.mixer.music.load("chomp.mp3")
-            pygame.mixer.music.play()'''
 
-        keys = pygame.key.get_pressed()
+        '''keys = pygame.key.get_pressed()
         if keys[pygame.K_w] or keys[pygame.K_UP]:             #all the key presses
-            y = player1.getY()
-            x = player1.getX()
-            if "up" in collide(background, x, y):
-                player1.setY(y - size)
-            time.sleep(0.04)
-            background.fill((0, 0, 0))
+            player1 = move(background, player1, "up", size)
             manim += 1
             if manim % 3 == 0:
-                print("entered" + str(toggle))
                 toggle = not toggle
-            draw(background, player1.getX(), player1.getY(), 1, toggle, size)
+            draw(background, player1, toggle, size)
 
-        elif keys[pygame.K_a] or keys[pygame.K_LEFT]:
+        if keys[pygame.K_a] or keys[pygame.K_LEFT]:
             y = player1.getY()
             x = player1.getX()
             if x == 10 and y == 230:
-                player1.setX(360)
-            manim += 1
-            if "lft" in collide(background, x, y):
-                player1.setX(x - size)
-            time.sleep(0.04)
-            background.fill((0, 0, 0))
-            if manim % 3 == 0:
-                print("entered" + str(toggle))
-                toggle = not toggle
-            draw(background, player1.getX(), player1.getY(), 2, toggle, size)
-
-        elif keys[pygame.K_s] or keys[pygame.K_DOWN]:
-            y = player1.getY()
-            x = player1.getX()
-            if "dn" in collide(background, x, y):
-                player1.setY(y + size)
-                time.sleep(0.04)
-            background.fill((0, 0, 0))
+                player1.setX(380)
+            player1 = move(background, player1, "lft", size)
             manim += 1
             if manim % 3 == 0:
-                print("entered" + str(toggle))
                 toggle = not toggle
-            draw(background, player1.getX(), player1.getY(), 3, toggle, size)
+            draw(background, player1, toggle, size)
 
-        elif keys[pygame.K_d] or keys[pygame.K_RIGHT]:
+        if keys[pygame.K_s] or keys[pygame.K_DOWN]:
+            player1 = move(background, player1, "dn", size)
+            manim += 1
+            if manim % 3 == 0:
+                toggle = not toggle
+            draw(background, player1, toggle, size)
+
+        if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
             y = player1.getY()
             x = player1.getX()
             if x == 370 and y == 230:
-                player1.setX(10)
-            if "rt" in collide(background, x, y):
-                player1.setX(x + size)
-            time.sleep(0.04)
-            background.fill((0, 0, 0))
+                player1.setX(0)
+            player1 = move(background, player1, "rt", size)
             manim += 1
             if manim % 3 == 0:
-                print("entered" + str(toggle))
                 toggle = not toggle
-            draw(background, player1.getX(), player1.getY(), 4, toggle, size)
+            draw(background, player1, toggle, size)'''
+
 
         #pygame.mixer.pause()
         for event in pygame.event.get():
             if event.type == QUIT:
                 return
             elif event.type == pygame.KEYDOWN:
+                group1 = collide(background, player1.getX(), player1.getY())
+                group2 = []
+                group3 = []
+                if player1.getFace() == 1:
+                    group2.append(collide(background, player1.getX(), player1.getY() - 10))
+                    group3.append(collide(background, player1.getX(), player1.getY() - 20))
+                if player1.getFace() == 2:
+                    group2.append(collide(background, player1.getX() - 10, player1.getY()))
+                    group3.append(collide(background, player1.getX() - 20, player1.getY()))
+                if player1.getFace() == 3:
+                    group2.append(collide(background, player1.getX(), player1.getY() + 10))
+                    group3.append(collide(background, player1.getX(), player1.getY() + 20))
+                if player1.getFace() == 4:
+                    group2.append(collide(background, player1.getX() + 10, player1.getY()))
+                    group3.append(collide(background, player1.getX() + 20, player1.getY()))
                 if event.key == pygame.K_0:
-                    print(player1.getY())
+                    print("(" + str (player1.getX()) + ", " + str (player1.getY()) + ")")
 
+                elif event.key == pygame.K_w or event.key == pygame.K_UP:
+                    if "up" in group1:
+                        slide1 = "up"
+                    elif "lft" in group2:
+                        slide2 = "up"
+                    elif "lft" in group3:
+                        slide3 = "up"
+
+                elif event.key == pygame.K_a or event.key == pygame.K_LEFT:
+                    if "lft" in group1:
+                        slide1 = "lft"
+                    elif "lft" in group2:
+                        slide2 = "lft"
+                    elif "lft" in group3:
+                        slide3 = "lft"
+
+                elif event.key == pygame.K_s or event.key == pygame.K_DOWN:
+                    if "dn" in group1:
+                        slide1 = "lft"
+                    elif "dn" in group2:
+                        slide2 = "lft"
+                    elif "dn" in group3:
+                        slide3 = "lft"
+
+                elif event.key == pygame.K_d or event.key == pygame.K_RIGHT:
+                    if "rt" in group1:
+                        slide1 = "rt"
+                    elif "rt" in group2:
+                        slide2 = "rt"
+                    elif "rt" in group3:
+                        slide3 = "rt"
+
+
+        if slide1 == "up":
+            player1 = move(background, player1, "up", size)
+            manim += 1
+            if manim % 3 == 0:
+                toggle = not toggle
+            draw(background, player1, toggle, size)
+
+        if slide == "lft":
+            y = player1.getY()
+            x = player1.getX()
+            if x == 10 and y == 230:
+                player1.setX(380)
+            player1 = move(background, player1, "lft", size)
+            manim += 1
+            if manim % 3 == 0:
+                toggle = not toggle
+            draw(background, player1, toggle, size)
+
+        if slide == "dn":
+            player1 = move(background, player1, "dn", size)
+            manim += 1
+            if manim % 3 == 0:
+                toggle = not toggle
+            draw(background, player1, toggle, size)
+
+        if slide == "rt":
+            y = player1.getY()
+            x = player1.getX()
+            if x == 370 and y == 230:
+                player1.setX(0)
+            player1 = move(background, player1, "rt", size)
+            manim += 1
+            if manim % 3 == 0:
+                toggle = not toggle
+            draw(background, player1, toggle, size)
 
         screen.blit(background, (0, 0))
         pygame.display.flip()
-
 
 
 ####################################
