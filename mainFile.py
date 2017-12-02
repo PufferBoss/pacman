@@ -188,10 +188,6 @@ def window(size):
         if manim == 6:
             manim = 0
 
-        '''pygame.mixer.init()
-        if not pygame.mixer.music.get_busy():
-            pygame.mixer.music.load("chomp.mp3")
-            pygame.mixer.music.play()'''
 
         '''keys = pygame.key.get_pressed()
         if keys[pygame.K_w] or keys[pygame.K_UP]:             #all the key presses
@@ -237,14 +233,18 @@ def window(size):
                 return
             elif event.type == pygame.KEYDOWN:
                 group1 = collide(background, player1.getX(), player1.getY())
-                '''if player1.getFace() == 1:
-                    group2 = collide(background, player1.getX(), player1.getY() - 10)
+                if player1.getFace() == 1:
+                    group1 += collide(background, player1.getX(), player1.getY() - 10)
+                    group1 += collide(background, player1.getX(), player1.getY() - 20)
                 if player1.getFace() == 2:
-                    group2 = collide(background, player1.getX() - 10, player1.getY())
+                    group1 += collide(background, player1.getX() - 10, player1.getY())
+                    group1 += collide(background, player1.getX() - 20, player1.getY())
                 if player1.getFace() == 3:
-                    group2 = collide(background, player1.getX(), player1.getY() + 10)
+                    group1 += collide(background, player1.getX(), player1.getY() + 10)
+                    group1 += collide(background, player1.getX(), player1.getY() + 20)
                 if player1.getFace() == 4:
-                    group2 = collide(background, player1.getX() + 10, player1.getY())'''
+                    group1 += collide(background, player1.getX() + 10, player1.getY())
+                    group1 += collide(background, player1.getX() + 20, player1.getY())
                 if event.key == pygame.K_0:
                     print("(" + str (player1.getX()) + ", " + str (player1.getY()) + ")")
 
