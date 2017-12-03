@@ -3,7 +3,7 @@ from pygame.locals import *
 import time
 
 
-class player():      #player class is pacman himself
+class Player():      #player class is pacman himself
 
     def __init__(self, xloc=190, yloc=370, face=1, god=False):
         self.xloc = xloc
@@ -30,7 +30,7 @@ class player():      #player class is pacman himself
         self.face = obj
 
 
-class ghost():
+class Ghost():
 
     def __init__(self, xloc = 190, yloc = 230, color = (255, 0, 0)):
         self.xloc = xloc
@@ -104,7 +104,29 @@ def grid(background, size, needs):
         return (rgbgrid, biggrid)
 
 
-def draw(background, player1, toggle, rad):
+def drawghost(background, ghost, rad):
+    x = ghost.getX()
+    y = ghost.getY()
+    color = ghost.getColor()
+    pygame.draw.circle(background, color, (x, y), rad)
+    rect = pygame.rect.Rect(x - size, y, size * 2, int (size))
+    pygame.draw.rect(background, color, rect)
+    pygame.draw.polygon(background, (0, 0, 0), [[x - size, y + size], [x - (size / 1.7), y + (size / 2)], [x, y + size]])
+    pygame.draw.polygon(background, (0, 0, 0), [[x + size, y + size], [x + (size / 1.7), y + (size / 2)], [x, y + size]])
+
+    pygame.draw.circle(background, (255, 255, 255), (x - 4, y - 2), 3)
+    pygame.draw.circle(background, (255, 255, 255), (x + 4, y - 2), 3)
+
+    pygame.draw.circle(background, (0, 0, 0), (x - 3, y - 2), 1)
+    pygame.draw.circle(background, (0, 0, 0), (x + 3, y - 2), 1)
+
+
+def draw(background, player1, toggle, rad, ghosts):
+    inky = ghosts[0]
+    blinky = ghosts[1]
+    pinky = ghosts[2]
+    clyde = ghosts[3]
+
     x = player1.getX()
     y = player1.getY()
     face = player1.getFace()
@@ -134,23 +156,10 @@ def draw(background, player1, toggle, rad):
     pygame.draw.circle(background, (255, 255, 0), (x, y), rad)         #draws circle
     if  toggle:
         pygame.draw.polygon(background, (0, 0, 0), [[x, y], [x1, y1], [x2, y2]])       #does it draw the triangle or not
-
-
-def drawghost(background, ghost, rad):
-    x = ghost.getX()
-    y = ghost.getY()
-    color = ghost.getColor()
-    pygame.draw.circle(background, color, (x, y), rad)
-    rect = pygame.rect.Rect(x - size, y, size * 2, int (size))
-    pygame.draw.rect(background, color, rect)
-    pygame.draw.polygon(background, (0, 0, 0), [[x - size, y + size], [x - (size / 1.7), y + (size / 2)], [x, y + size]])
-    pygame.draw.polygon(background, (0, 0, 0), [[x + size, y + size], [x + (size / 1.7), y + (size / 2)], [x, y + size]])
-
-    pygame.draw.circle(background, (255, 255, 255), (x - 4, y - 2), 3)
-    pygame.draw.circle(background, (255, 255, 255), (x + 4, y - 2), 3)
-
-    pygame.draw.circle(background, (0, 0, 0), (x - 3, y - 2), 1)
-    pygame.draw.circle(background, (0, 0, 0), (x + 3, y - 2), 1)
+    drawghost(background, inky, size)
+    drawghost(background, blinky, size)
+    drawghost(background, pinky, size)
+    drawghost(background, clyde, size)
 
 
 def collide(background, x, y):                 #returns array consisting of the possible movements the player can make
@@ -218,28 +227,39 @@ def window(size):
     collide(background, 0, 0)
 
 
-    player1 = player()
-    draw(background, player1, True, size)
-    blinky = ghost()
+    player1 = Player()
+
+    inky = Ghost()
+    inky.setColor((0, 255, 255))
+    inky.setX(inky.getX() + 20)
+    inky.setY(inky.getY() + 20)
+
+    blinky = Ghost()
     blinky.setColor((255, 0, 0))
     blinky.setX(blinky.getX() - 20)
     blinky.setY(blinky.getY() - 20)
-    drawghost(background, blinky, size)
-    clyde = ghost()
+
+    pinky = Ghost()
+    pinky.setColor((255, 102, 255))
+    pinky.setX(pinky.getX() + 20)
+    pinky.setY(pinky.getY() - 20)
+
+    clyde = Ghost()
     clyde.setColor((255, 128, 0))
+    clyde.setX(clyde.getX() - 20)
+    clyde.setY(clyde.getY() + 20)
 
-
-    drawghost(background, clyde, size)
+    ghosts = [inky, blinky, pinky, clyde]
+    draw(background, player1, True, size, ghosts)
     # Blit everything to the screen
     screen.blit(background, (0, 0))
     pygame.display.flip()
 
     # Event loop
+    score = 0
     manim = 0
     toggle = True
-    slide1 = ""
-    slide2 = ""
-    slide3 = ""
+    slide1 = slide2 = slide3 = ""
     while True:
         if manim == 6:
             manim = 0
@@ -310,13 +330,15 @@ def window(size):
                         slide1 = "rt"
 
         if slide1 == "up":
+            ghosts = [inky, blinky, pinky, clyde]
             player1 = move(background, player1, "up", size)
             manim += 1
             if manim % 3 == 0:
                 toggle = not toggle
-            draw(background, player1, toggle, size)
+            draw(background, player1, toggle, size, ghosts)
 
         if slide1 == "lft":
+            ghosts = [inky, blinky, pinky, clyde]
             y = player1.getY()
             x = player1.getX()
             if x == 10 and y == 230:
@@ -325,16 +347,18 @@ def window(size):
             manim += 1
             if manim % 3 == 0:
                 toggle = not toggle
-            draw(background, player1, toggle, size)
+            draw(background, player1, toggle, size, ghosts)
 
         if slide1 == "dn":
+            ghosts = [inky, blinky, pinky, clyde]
             player1 = move(background, player1, "dn", size)
             manim += 1
             if manim % 3 == 0:
                 toggle = not toggle
-            draw(background, player1, toggle, size)
+            draw(background, player1, toggle, size, ghosts)
 
         if slide1 == "rt":
+            ghosts = [inky, blinky, pinky, clyde]
             y = player1.getY()
             x = player1.getX()
             if x == 370 and y == 230:
@@ -343,7 +367,7 @@ def window(size):
             manim += 1
             if manim % 3 == 0:
                 toggle = not toggle
-            draw(background, player1, toggle, size)
+            draw(background, player1, toggle, size, ghosts)
 
         screen.blit(background, (0, 0))
         pygame.display.flip()
