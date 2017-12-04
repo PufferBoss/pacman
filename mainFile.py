@@ -13,7 +13,9 @@ def grid(background, size, needs):
     biggrid = [[0] * 24 for n in range(19)]
     for row in range(19):
         for col in range(24):
-            biggrid[row][col] = pygame.rect.Rect(row * 20, col * 20, size * 2, size * 2)    #creates the grid but doesnt draw it. rect obejct can be toyed with
+            biggrid[row][col] = pygame.rect.Rect(row * 20, col * 20, size * 2, size * 2)
+
+            # make grid but doesnt draw. rect can be toyed with
 
     rgbgrid = [[o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o],
                [w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w],
@@ -30,7 +32,7 @@ def grid(background, size, needs):
                [w, w, w, w, o, w, o, w, o, o, o, w, o, w, o, w, w, w, w],
                [o, o, o, w, o, w, o, w, w, w, w, w, o, w, o, w, o, o, o],
                [o, o, o, w, o, w, o, o, o, o, o, o, o, w, o, w, o, o, o],
-               [w, w, w, w, o, w, o, w, w, w, w, w, o, w, o, w, w, w, w],                #the map represented in text. should try and make this hidden and used as hitboxes
+               [w, w, w, w, o, w, o, w, w, w, w, w, o, w, o, w, w, w, w],                # map represented in text.
                [w, o, o, o, o, o, o, o, o, w, o, o, o, o, o, o, o, o, w],
                [w, o, w, w, o, w, w, w, o, w, o, w, w, w, o, w, w, o, w],
                [w, o, o, w, o, o, o, o, o, o, o, o, o, o, o, w, o, o, w],
@@ -42,8 +44,8 @@ def grid(background, size, needs):
 
     for row in range(19):
         for col in range(24):
-            pygame.draw.rect(background, rgbgrid[col][row], biggrid[row][col])          #draws the rects, data can not be collected
-    #background.fill((0, 0, 0))
+            pygame.draw.rect(background, rgbgrid[col][row], biggrid[row][col])         # draws the rects, data can not be collected
+    # background.fill((0, 0, 0))
     '''for row in range(19):
         for col in range(24):
             pygame.draw.rect(background, (row*10, col*10, 100), biggrid[row][col])'''
@@ -52,7 +54,7 @@ def grid(background, size, needs):
         return (rgbgrid, biggrid)
 
 
-def collide(background, x, y):                 #returns array consisting of the possible movements the player can make
+def collide(background, x, y):                 # returns array consisting of the possible movements the player can make
     rgbgrid = grid(background, size, True)[0]
     biggrid = grid(background, size, True)[1]
     coordgrid = []
@@ -81,8 +83,9 @@ def collide(background, x, y):                 #returns array consisting of the 
         works.append("lft")
     if rt in coordgrid or rt2 in coordgrid:
         works.append("rt")
-    #print(works)
+    # print(works)
     return works
+
 
 def move(background, player1, direct, size):
     y = player1.getY()
@@ -105,15 +108,13 @@ def move(background, player1, direct, size):
     background.fill((0, 0, 0))
     return player1
 
+
 def window(size):
     # initialise screen
     pygame.init()
     screen = pygame.display.set_mode((int(38 * size), 48 * size))
     pygame.display.set_caption('PACMAN')
     background = pygame.Surface(screen.get_size())
-
-    #grid(background, size)
-    collide(background, 0, 0)
 
     player1 = Player()
     inky = Ghost(210, 250, (0, 255, 255))
@@ -149,7 +150,7 @@ def window(size):
                     if "up" in group1:
                         slide1 = "up"
 
-                elif event.key == pygame.K_a or event.key == pygame.K_LEFT:
+                elif event.key == pygame.K_a or event.key == pygame.K_LEFT:   #this is temporary, it will be used to make the turns better
                     if "lft" in group1:
                         slide1 = "lft"
 
@@ -162,34 +163,15 @@ def window(size):
                         slide1 = "rt"
 
         ghosts = [inky, blinky, pinky, clyde]
-        if slide1 == "up":
-            player1 = move(background, player1, "up", size)
-            manim += 1
-            if manim % 3 == 0:
-                toggle = not toggle
 
-        if slide1 == "lft":
+        if not slide1 == "":
             y = player1.getY()
             x = player1.getX()
-            if x == 10 and y == 230:
+            if slide1 == "lft" and x == 10 and y == 230:
                 player1.setX(380)
-            player1 = move(background, player1, "lft", size)
-            manim += 1
-            if manim % 3 == 0:
-                toggle = not toggle
-
-        if slide1 == "dn":
-            player1 = move(background, player1, "dn", size)
-            manim += 1
-            if manim % 3 == 0:
-                toggle = not toggle
-
-        if slide1 == "rt":
-            y = player1.getY()
-            x = player1.getX()
-            if x == 370 and y == 230:
+            elif slide1 == "rt" and x == 370 and y == 230:
                 player1.setX(0)
-            player1 = move(background, player1, "rt", size)
+            player1 = move(background, player1, slide1, size)
             manim += 1
             if manim % 3 == 0:
                 toggle = not toggle
