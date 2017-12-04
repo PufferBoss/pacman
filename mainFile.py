@@ -112,9 +112,6 @@ def window(size):
     pygame.display.set_caption('PACMAN')
     background = pygame.Surface(screen.get_size())
 
-    #grid(background, size)
-    collide(background, 0, 0)
-
     player1 = Player()
     inky = Ghost(210, 250, (0, 255, 255))
     blinky = Ghost(170, 210, (255, 0, 0))
@@ -149,7 +146,7 @@ def window(size):
                     if "up" in group1:
                         slide1 = "up"
 
-                elif event.key == pygame.K_a or event.key == pygame.K_LEFT:
+                elif event.key == pygame.K_a or event.key == pygame.K_LEFT:   #this is temporary, it will be used to make the turns better
                     if "lft" in group1:
                         slide1 = "lft"
 
@@ -162,34 +159,15 @@ def window(size):
                         slide1 = "rt"
 
         ghosts = [inky, blinky, pinky, clyde]
-        if slide1 == "up":
-            player1 = move(background, player1, "up", size)
-            manim += 1
-            if manim % 3 == 0:
-                toggle = not toggle
 
-        if slide1 == "lft":
+        if not slide1 == "":
             y = player1.getY()
             x = player1.getX()
-            if x == 10 and y == 230:
+            if slide1 == "lft" and x == 10 and y == 230:
                 player1.setX(380)
-            player1 = move(background, player1, "lft", size)
-            manim += 1
-            if manim % 3 == 0:
-                toggle = not toggle
-
-        if slide1 == "dn":
-            player1 = move(background, player1, "dn", size)
-            manim += 1
-            if manim % 3 == 0:
-                toggle = not toggle
-
-        if slide1 == "rt":
-            y = player1.getY()
-            x = player1.getX()
-            if x == 370 and y == 230:
+            elif slide1 == "rt" and x == 370 and y == 230:
                 player1.setX(0)
-            player1 = move(background, player1, "rt", size)
+            player1 = move(background, player1, slide1, size)
             manim += 1
             if manim % 3 == 0:
                 toggle = not toggle
