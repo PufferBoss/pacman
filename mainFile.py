@@ -13,7 +13,9 @@ def grid(background, size, needs):
     biggrid = [[0] * 24 for n in range(19)]
     for row in range(19):
         for col in range(24):
-            biggrid[row][col] = pygame.rect.Rect(row * 20, col * 20, size * 2, size * 2)    #creates the grid but doesnt draw it. rect obejct can be toyed with
+            biggrid[row][col] = pygame.rect.Rect(row * 20, col * 20, size * 2, size * 2)
+
+            # make grid but doesnt draw. rect can be toyed with
 
     rgbgrid = [[o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o],
                [w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w],
@@ -30,7 +32,7 @@ def grid(background, size, needs):
                [w, w, w, w, o, w, o, w, o, o, o, w, o, w, o, w, w, w, w],
                [o, o, o, w, o, w, o, w, w, w, w, w, o, w, o, w, o, o, o],
                [o, o, o, w, o, w, o, o, o, o, o, o, o, w, o, w, o, o, o],
-               [w, w, w, w, o, w, o, w, w, w, w, w, o, w, o, w, w, w, w],                #the map represented in text. should try and make this hidden and used as hitboxes
+               [w, w, w, w, o, w, o, w, w, w, w, w, o, w, o, w, w, w, w],                # map represented in text.
                [w, o, o, o, o, o, o, o, o, w, o, o, o, o, o, o, o, o, w],
                [w, o, w, w, o, w, w, w, o, w, o, w, w, w, o, w, w, o, w],
                [w, o, o, w, o, o, o, o, o, o, o, o, o, o, o, w, o, o, w],
@@ -42,8 +44,8 @@ def grid(background, size, needs):
 
     for row in range(19):
         for col in range(24):
-            pygame.draw.rect(background, rgbgrid[col][row], biggrid[row][col])          #draws the rects, data can not be collected
-    #background.fill((0, 0, 0))
+            pygame.draw.rect(background, rgbgrid[col][row], biggrid[row][col])         # draws the rects, data can not be collected
+    # background.fill((0, 0, 0))
     '''for row in range(19):
         for col in range(24):
             pygame.draw.rect(background, (row*10, col*10, 100), biggrid[row][col])'''
@@ -52,7 +54,7 @@ def grid(background, size, needs):
         return (rgbgrid, biggrid)
 
 
-def collide(background, x, y):                 #returns array consisting of the possible movements the player can make
+def collide(background, x, y):                 # returns array consisting of the possible movements the player can make
     rgbgrid = grid(background, size, True)[0]
     biggrid = grid(background, size, True)[1]
     coordgrid = []
@@ -81,8 +83,9 @@ def collide(background, x, y):                 #returns array consisting of the 
         works.append("lft")
     if rt in coordgrid or rt2 in coordgrid:
         works.append("rt")
-    #print(works)
+    # print(works)
     return works
+
 
 def move(background, player1, direct, size):
     y = player1.getY()
@@ -104,6 +107,7 @@ def move(background, player1, direct, size):
     time.sleep(0.06)
     background.fill((0, 0, 0))
     return player1
+
 
 def window(size):
     # initialise screen
