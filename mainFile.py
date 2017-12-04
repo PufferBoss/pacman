@@ -105,7 +105,6 @@ def move(background, player1, direct, size):
             player1.setX(x + size)
             player1.setFace(4)
     time.sleep(0.06)
-    background.fill((0, 0, 0))
     return player1
 
 
@@ -115,55 +114,38 @@ def window(size):
     screen = pygame.display.set_mode((int(38 * size), 48 * size))
     pygame.display.set_caption('PACMAN')
     background = pygame.Surface(screen.get_size())
-
     player1 = Player()
     inky = Ghost(210, 250, (0, 255, 255))
     blinky = Ghost(170, 210, (255, 0, 0))
     pinky = Ghost(210, 210, (255, 102, 255))
     clyde = Ghost(170, 250, (255, 128, 0))
-
-    ghosts = [inky, blinky, pinky, clyde]
-    player1.draw(background, player1, True, size, ghosts)
-    # Blit everything to the screen
-    screen.blit(background, (0, 0))
-    pygame.display.flip()
-
     # Event loop
-    score = 0
     manim = 0
     toggle = True
     slide1 = slide2 = slide3 = ""
     while True:
         if manim == 6:
             manim = 0
-
         for event in pygame.event.get():
             if event.type == QUIT:
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
                 group1 = collide(background, player1.getX(), player1.getY())
-
                 if event.key == pygame.K_0:
                     print("(" + str (player1.getX()) + ", " + str (player1.getY()) + ")")
-
                 elif event.key == pygame.K_w or event.key == pygame.K_UP:
                     if "up" in group1:
                         slide1 = "up"
-
                 elif event.key == pygame.K_a or event.key == pygame.K_LEFT:   #this is temporary, it will be used to make the turns better
                     if "lft" in group1:
                         slide1 = "lft"
-
                 elif event.key == pygame.K_s or event.key == pygame.K_DOWN:
                     if "dn" in group1:
                         slide1 = "dn"
-
                 elif event.key == pygame.K_d or event.key == pygame.K_RIGHT:
                     if "rt" in group1:
                         slide1 = "rt"
-
         ghosts = [inky, blinky, pinky, clyde]
-
         if not slide1 == "":
             y = player1.getY()
             x = player1.getX()
@@ -175,7 +157,6 @@ def window(size):
             manim += 1
             if manim % 3 == 0:
                 toggle = not toggle
-
         player1.draw(background, player1, toggle, size, ghosts)
         screen.blit(background, (0, 0))
         pygame.display.flip()
