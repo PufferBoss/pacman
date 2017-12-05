@@ -144,9 +144,9 @@ def window(size):
         if not slide1 == "":
             y = player1.getY()
             x = player1.getX()
-            if slide1 == "lft" and x == 10 and y == 230:
+            if slide1 == "lft" and x <= 10 and y == 230:
                 player1.setX(380)
-            elif slide1 == "rt" and x == 370 and y == 230:
+            elif slide1 == "rt" and x >= 370 and y == 230:
                 player1.setX(0)
             if slidenext in collide(background, x, y):
                 player1 = move(background, player1, slidenext, size)
