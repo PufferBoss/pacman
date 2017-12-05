@@ -109,7 +109,7 @@ def move(background, player, direct, size):
 
 
 def window(size):
-    # initialise the screen
+    # initialise screen
     pygame.init()
     screen = pygame.display.set_mode((int(38 * size), 48 * size))
     pygame.display.set_caption('PACMAN')
