@@ -30,15 +30,15 @@ class Player:      #player class is pacman himself
     def setFace(self, obj):
         self.face = obj
 
-    def draw(self, background, player1, toggle, rad, ghosts):
+    def draw(self, background, player, toggle, rad, ghosts):
         inky = ghosts[0]
         blinky = ghosts[1]
         pinky = ghosts[2]
         clyde = ghosts[3]
 
-        x = player1.getX()
-        y = player1.getY()
-        face = player1.getFace()
+        x = player.getX()
+        y = player.getY()
+        face = player.getFace()
 
         if face == 1:
             x1 = x + rad - 2

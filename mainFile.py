@@ -87,25 +87,25 @@ def collide(background, x, y):                 # returns array consisting of the
     return works
 
 
-def move(background, player1, direct, size):
-    y = player1.getY()
-    x = player1.getX()
+def move(background, player, direct, size):
+    y = player.getY()
+    x = player.getX()
 
     if direct in collide(background, x, y):
         if direct == "up":
-            player1.setY(y - size)
-            player1.setFace(1)
+            player.setY(y - size)
+            player.setFace(1)
         elif direct == "dn":
-            player1.setY(y + size)
-            player1.setFace(3)
+            player.setY(y + size)
+            player.setFace(3)
         elif direct == "lft":
-            player1.setX(x - size)
-            player1.setFace(2)
+            player.setX(x - size)
+            player.setFace(2)
         elif direct == "rt":
-            player1.setX(x + size)
-            player1.setFace(4)
+            player.setX(x + size)
+            player.setFace(4)
     time.sleep(0.06)
-    return player1
+    return player
 
 
 def window(size):
@@ -120,31 +120,26 @@ def window(size):
     pinky = Ghost(210, 210, (255, 102, 255))
     clyde = Ghost(170, 250, (255, 128, 0))
     # Event loop
-    manim = 0
-    toggle = True
-    slide1 = slide2 = slide3 = ""
+    reps = toggle = 0
+    slide1 = slidenext = "1"
     while True:
-        if manim == 6:
-            manim = 0
+        if reps == 6:
+            reps = 0
         for event in pygame.event.get():
             if event.type == QUIT:
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
-                group1 = collide(background, player1.getX(), player1.getY())
+                keys = pygame.key.get_pressed()
+                if keys[pygame.K_w]:
+                    slidenext = "up"
+                if keys[pygame.K_a]:
+                    slidenext = "lft"
+                if keys[pygame.K_s]:
+                    slidenext = "dn"
+                if keys[pygame.K_d]:
+                    slidenext = "rt"
                 if event.key == pygame.K_0:
                     print("(" + str (player1.getX()) + ", " + str (player1.getY()) + ")")
-                elif event.key == pygame.K_w or event.key == pygame.K_UP:
-                    if "up" in group1:
-                        slide1 = "up"
-                elif event.key == pygame.K_a or event.key == pygame.K_LEFT:   #this is temporary, it will be used to make the turns better
-                    if "lft" in group1:
-                        slide1 = "lft"
-                elif event.key == pygame.K_s or event.key == pygame.K_DOWN:
-                    if "dn" in group1:
-                        slide1 = "dn"
-                elif event.key == pygame.K_d or event.key == pygame.K_RIGHT:
-                    if "rt" in group1:
-                        slide1 = "rt"
         ghosts = [inky, blinky, pinky, clyde]
         if not slide1 == "":
             y = player1.getY()
@@ -153,9 +148,14 @@ def window(size):
                 player1.setX(380)
             elif slide1 == "rt" and x == 370 and y == 230:
                 player1.setX(0)
-            player1 = move(background, player1, slide1, size)
-            manim += 1
-            if manim % 3 == 0:
+            if slidenext in collide(background, x, y):
+                player1 = move(background, player1, slidenext, size)
+                slide1 = slidenext
+                slidenext = ""
+            else:
+                player1 = move(background, player1, slide1, size)
+            reps += 1
+            if reps % 3 == 0:
                 toggle = not toggle
         player1.draw(background, player1, toggle, size, ghosts)
         screen.blit(background, (0, 0))
