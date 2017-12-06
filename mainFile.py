@@ -104,7 +104,7 @@ def move(background, player, direct, size):
         elif direct == "rt":
             player.setX(x + size)
             player.setFace(4)
-    time.sleep(0.06)
+    time.sleep(0.07)
     return player
 
 
@@ -130,13 +130,13 @@ def window(size):
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
                 keys = pygame.key.get_pressed()
-                if keys[pygame.K_w]:
+                if keys[pygame.K_w] or keys[pygame.K_UP]:
                     slidenext = "up"
-                if keys[pygame.K_a]:
+                if keys[pygame.K_a] or keys[pygame.K_LEFT]:
                     slidenext = "lft"
-                if keys[pygame.K_s]:
+                if keys[pygame.K_s] or keys[pygame.K_DOWN]:
                     slidenext = "dn"
-                if keys[pygame.K_d]:
+                if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
                     slidenext = "rt"
                 if event.key == pygame.K_0:
                     print("(" + str (player1.getX()) + ", " + str (player1.getY()) + ")")

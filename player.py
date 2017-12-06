@@ -6,7 +6,7 @@ from ghost import Ghost
 
 class Player:      #player class is pacman himself
 
-    def __init__(self, xloc=190, yloc=370, face=1, god=False):
+    def __init__(self, xloc=190, yloc=350, face=1, god=False):
         self.xloc = xloc
         self.yloc = yloc
         self.face = face
