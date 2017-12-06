@@ -9,11 +9,11 @@ def grid(background, size, needs):
     o = (0, 0, 0)
     w = (0, 0, 255)
     t = (255, 0, 128)
-    r = (1, 1, 1)
+    r = (1, 1, 100)
     biggrid = [[0] * 24 for n in range(19)]
     for row in range(19):
         for col in range(24):
-            biggrid[row][col] = pygame.rect.Rect(row * 20, col * 20, size * 2, size * 2)
+            biggrid[row][col] = pygame.rect.Rect(row * size * 2, col * size * 2, size * 2, size * 2)
 
             # make grid but doesnt draw. rect can be toyed with
 
@@ -39,12 +39,14 @@ def grid(background, size, needs):
                [w, w, o, w, o, w, o, w, w, w, w, w, o, w, o, w, o, w, w],
                [w, o, o, o, o, w, o, o, o, w, o, o, o, w, o, o, o, o, w],
                [w, o, w, w, w, w, w, w, o, w, o, w, w, w, w, w, w, o, w],
-               [w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
+               [w, o, o, o, o, o, o, o, o, o, o, r, o, o, o, o, o, o, w],
                [w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w]]
 
     for row in range(19):
         for col in range(24):
             pygame.draw.rect(background, rgbgrid[col][row], biggrid[row][col])         # draws the rects, data can not be collected
+            if rgbgrid[col][row] == r:
+                biggrid[row][col] = pygame.draw.circle(background, (255, 255, 255), (row * 20 + 10, col * 20 + 10), 3)
     # background.fill((0, 0, 0))
     '''for row in range(19):
         for col in range(24):
@@ -60,8 +62,12 @@ def collide(background, x, y):                 # returns array consisting of the
     coordgrid = []
     for row in range(19):
         for col in range(24):
-            if rgbgrid[col][row] == (0, 0, 0):
-                coord = [biggrid[row][col].left, biggrid[row][col].top]
+            if rgbgrid[col][row] == (0, 0, 0) or rgbgrid[col][row] == (1, 1, 100):
+                if rgbgrid[col][row] == (1, 1, 100):
+                    coord = [(col * 20), (row * 20)]
+                    print("")
+                else:
+                    coord = [col*20, row*20]
                 coordgrid.append(coord)
     up = [x - 10, y - 30]
     up2 = [x - 10, y - 20]
@@ -83,7 +89,7 @@ def collide(background, x, y):                 # returns array consisting of the
         works.append("lft")
     if rt in coordgrid or rt2 in coordgrid:
         works.append("rt")
-    # print(works)
+    print(works)
     return works
 
 
@@ -120,7 +126,7 @@ def window(size):
     pinky = Ghost(210, 210, (255, 102, 255))
     clyde = Ghost(170, 250, (255, 128, 0))
     # Event loop
-    reps = toggle = 0
+    reps = toggle = score = 0
     slide1 = slidenext = "1"
     while True:
         if reps == 6:
