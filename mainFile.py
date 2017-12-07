@@ -9,7 +9,7 @@ def grid(background, size, needs):
     o = (0, 0, 0)
     w = (0, 0, 255)
     t = (255, 0, 128)
-    r = (1, 1, 100)
+    r = (1, 1, 1)
     biggrid = [[0] * 24 for n in range(19)]
     for row in range(19):
         for col in range(24):
@@ -17,36 +17,36 @@ def grid(background, size, needs):
 
             # make grid but doesnt draw. rect can be toyed with
 
-    rgbgrid = [[o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o],
+    rgbgrid = [[r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r],
                [w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w],
                [w, o, o, o, o, o, o, o, o, w, o, o, o, o, o, o, o, o, w],
                [w, o, w, w, o, w, w, w, o, w, o, w, w, w, o, w, w, o, w],
                [w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
                [w, o, w, w, o, w, o, w, w, w, w, w, o, w, o, w, w, o, w],
                [w, o, o, o, o, w, o, o, o, w, o, o, o, w, o, o, o, o, w],
-               [w, w, w, w, o, w, w, w, o, w, o, w, w, w, o, w, w, w, w],
-               [o, o, o, w, o, w, o, o, o, o, o, o, o, w, o, w, o, o, o],
-               [o, o, o, w, o, w, o, w, w, t, w, w, o, w, o, w, o, o, o],
-               [w, w, w, w, o, w, o, w, o, o, o, w, o, w, o, w, w, w, w],
-               [o, o, o, o, o, o, o, w, o, o, o, w, o, o, o, o, o, o, o],
-               [w, w, w, w, o, w, o, w, o, o, o, w, o, w, o, w, w, w, w],
-               [o, o, o, w, o, w, o, w, w, w, w, w, o, w, o, w, o, o, o],
-               [o, o, o, w, o, w, o, o, o, o, o, o, o, w, o, w, o, o, o],
-               [w, w, w, w, o, w, o, w, w, w, w, w, o, w, o, w, w, w, w],                # map represented in text.
+               [w, w, w, w, o, w, w, w, r, w, r, w, w, w, o, w, w, w, w],
+               [r, r, r, w, o, w, r, r, r, r, r, r, r, w, o, w, r, r, r],
+               [r, r, r, w, o, w, r, w, w, t, w, w, r, w, o, w, r, r, r],
+               [w, w, w, w, o, w, r, w, r, r, r, w, r, w, o, w, w, w, w],
+               [r, r, r, r, o, r, r, w, r, r, r, w, r, r, o, r, r, r, r],
+               [w, w, w, w, o, w, r, w, r, r, r, w, r, w, o, w, w, w, w],
+               [r, r, r, w, o, w, r, w, w, w, w, w, r, w, o, w, r, r, r],
+               [r, r, r, w, o, w, r, r, r, r, r, r, r, w, o, w, r, r, r],
+               [w, w, w, w, o, w, r, w, w, w, w, w, r, w, o, w, w, w, w],                # map represented in text.
                [w, o, o, o, o, o, o, o, o, w, o, o, o, o, o, o, o, o, w],
                [w, o, w, w, o, w, w, w, o, w, o, w, w, w, o, w, w, o, w],
                [w, o, o, w, o, o, o, o, o, o, o, o, o, o, o, w, o, o, w],
                [w, w, o, w, o, w, o, w, w, w, w, w, o, w, o, w, o, w, w],
                [w, o, o, o, o, w, o, o, o, w, o, o, o, w, o, o, o, o, w],
                [w, o, w, w, w, w, w, w, o, w, o, w, w, w, w, w, w, o, w],
-               [w, o, o, o, o, o, o, o, o, o, o, r, o, o, o, o, o, o, w],
+               [w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
                [w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w]]
 
     for row in range(19):
         for col in range(24):
             pygame.draw.rect(background, rgbgrid[col][row], biggrid[row][col])         # draws the rects, data can not be collected
-            if rgbgrid[col][row] == r:
-                biggrid[row][col] = pygame.draw.circle(background, (255, 255, 255), (row * 20 + 10, col * 20 + 10), 3)
+            '''if rgbgrid[col][row] == r:
+                biggrid[row][col] = pygame.draw.circle(background, (255, 255, 255), (row * 20 + 10, col * 20 + 10), 3)'''
     # background.fill((0, 0, 0))
     '''for row in range(19):
         for col in range(24):
@@ -62,12 +62,8 @@ def collide(background, x, y):                 # returns array consisting of the
     coordgrid = []
     for row in range(19):
         for col in range(24):
-            if rgbgrid[col][row] == (0, 0, 0) or rgbgrid[col][row] == (1, 1, 100):
-                if rgbgrid[col][row] == (1, 1, 100):
-                    coord = [(col * 20), (row * 20)]
-                    print("")
-                else:
-                    coord = [col*20, row*20]
+            if rgbgrid[col][row] == (0, 0, 0) or rgbgrid[col][row] == (1, 1, 1):
+                coord = [biggrid[row][col].left, biggrid[row][col].top]
                 coordgrid.append(coord)
     up = [x - 10, y - 30]
     up2 = [x - 10, y - 20]
@@ -89,7 +85,7 @@ def collide(background, x, y):                 # returns array consisting of the
         works.append("lft")
     if rt in coordgrid or rt2 in coordgrid:
         works.append("rt")
-    print(works)
+    # print(works)
     return works
 
 
@@ -129,6 +125,7 @@ def window(size):
     reps = toggle = score = 0
     slide1 = slidenext = "1"
     while True:
+        player1.points(background, player1)
         if reps == 6:
             reps = 0
         for event in pygame.event.get():
