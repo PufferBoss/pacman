@@ -3,62 +3,12 @@ from pygame.locals import *
 import time
 from player import Player
 from ghost import Ghost
-
-
-def grid(background, size, needs):
-    o = (0, 0, 0)
-    w = (0, 0, 255)
-    t = (255, 0, 128)
-    r = (1, 1, 1)
-    biggrid = [[0] * 24 for n in range(19)]
-    for row in range(19):
-        for col in range(24):
-            biggrid[row][col] = pygame.rect.Rect(row * size * 2, col * size * 2, size * 2, size * 2)
-
-            # make grid but doesnt draw. rect can be toyed with
-
-    rgbgrid = [[r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r],
-               [w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w],
-               [w, o, o, o, o, o, o, o, o, w, o, o, o, o, o, o, o, o, w],
-               [w, o, w, w, o, w, w, w, o, w, o, w, w, w, o, w, w, o, w],
-               [w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
-               [w, o, w, w, o, w, o, w, w, w, w, w, o, w, o, w, w, o, w],
-               [w, o, o, o, o, w, o, o, o, w, o, o, o, w, o, o, o, o, w],
-               [w, w, w, w, o, w, w, w, r, w, r, w, w, w, o, w, w, w, w],
-               [r, r, r, w, o, w, r, r, r, r, r, r, r, w, o, w, r, r, r],
-               [r, r, r, w, o, w, r, w, w, t, w, w, r, w, o, w, r, r, r],
-               [w, w, w, w, o, w, r, w, r, r, r, w, r, w, o, w, w, w, w],
-               [r, r, r, r, o, r, r, w, r, r, r, w, r, r, o, r, r, r, r],
-               [w, w, w, w, o, w, r, w, r, r, r, w, r, w, o, w, w, w, w],
-               [r, r, r, w, o, w, r, w, w, w, w, w, r, w, o, w, r, r, r],
-               [r, r, r, w, o, w, r, r, r, r, r, r, r, w, o, w, r, r, r],
-               [w, w, w, w, o, w, r, w, w, w, w, w, r, w, o, w, w, w, w],                # map represented in text.
-               [w, o, o, o, o, o, o, o, o, w, o, o, o, o, o, o, o, o, w],
-               [w, o, w, w, o, w, w, w, o, w, o, w, w, w, o, w, w, o, w],
-               [w, o, o, w, o, o, o, o, o, o, o, o, o, o, o, w, o, o, w],
-               [w, w, o, w, o, w, o, w, w, w, w, w, o, w, o, w, o, w, w],
-               [w, o, o, o, o, w, o, o, o, w, o, o, o, w, o, o, o, o, w],
-               [w, o, w, w, w, w, w, w, o, w, o, w, w, w, w, w, w, o, w],
-               [w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
-               [w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w]]
-
-    for row in range(19):
-        for col in range(24):
-            pygame.draw.rect(background, rgbgrid[col][row], biggrid[row][col])         # draws the rects, data can not be collected
-            '''if rgbgrid[col][row] == r:
-                biggrid[row][col] = pygame.draw.circle(background, (255, 255, 255), (row * 20 + 10, col * 20 + 10), 3)'''
-    # background.fill((0, 0, 0))
-    '''for row in range(19):
-        for col in range(24):
-            pygame.draw.rect(background, (row*10, col*10, 100), biggrid[row][col])'''
-
-    if needs:
-        return (rgbgrid, biggrid)
-
+from mapgrid import Grid
 
 def collide(background, x, y):                 # returns array consisting of the possible movements the player can make
-    rgbgrid = grid(background, size, True)[0]
-    biggrid = grid(background, size, True)[1]
+    grid1 = Grid
+    rgbgrid = grid1.rgbgrid
+    biggrid = grid1.biggrid
     coordgrid = []
     for row in range(19):
         for col in range(24):
@@ -87,7 +37,6 @@ def collide(background, x, y):                 # returns array consisting of the
         works.append("rt")
     # print(works)
     return works
-
 
 def move(background, player, direct, size):
     y = player.getY()

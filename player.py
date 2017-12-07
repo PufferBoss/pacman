@@ -40,8 +40,9 @@ class Player:      #player class is pacman himself
     def points(self, background, player):
         x = player.getX
         y = player.getY
-        from mainFile import grid
-        pacdot = grid(background, 10, True)[0]
+        from mapgrid import Grid
+        level = Grid
+        pacdot = level.getbiggrid()
         for row in range(19):
             for col in range(24):
                 if pacdot[col][row] == (0, 0, 0):
@@ -84,8 +85,9 @@ class Player:      #player class is pacman himself
             x2 = x + rad
             y2 = y - rad - 2
 
-        from mainFile import grid
-        grid(background, rad, False)
+        from mapgrid import Grid
+        level = Grid
+        level.graph(background, level.rgbgrid, level.biggrid)
         dotgrid = self.points(background, player)
         for row in range(19):
             for col in range(24):
