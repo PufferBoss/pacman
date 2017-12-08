@@ -3,12 +3,62 @@ from pygame.locals import *
 import time
 from player import Player
 from ghost import Ghost
-from mapgrid import Grid
+
+
+def grid(background, size, needs):
+    o = (0, 0, 0)
+    w = (0, 0, 255)
+    t = (255, 0, 128)
+    r = (1, 1, 1)
+    biggrid = [[0] * 24 for n in range(19)]
+    for row in range(19):
+        for col in range(24):
+            biggrid[row][col] = pygame.rect.Rect(row * size * 2, col * size * 2, size * 2, size * 2)
+
+            # make grid but doesnt draw. rect can be toyed with
+
+    rgbgrid = [[r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r],
+               [w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w],
+               [w, o, o, o, o, o, o, o, o, w, o, o, o, o, o, o, o, o, w],
+               [w, o, w, w, o, w, w, w, o, w, o, w, w, w, o, w, w, o, w],
+               [w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
+               [w, o, w, w, o, w, o, w, w, w, w, w, o, w, o, w, w, o, w],
+               [w, o, o, o, o, w, o, o, o, w, o, o, o, w, o, o, o, o, w],
+               [w, w, w, w, o, w, w, w, r, w, r, w, w, w, o, w, w, w, w],
+               [r, r, r, w, o, w, r, r, r, r, r, r, r, w, o, w, r, r, r],
+               [r, r, r, w, o, w, r, w, w, t, w, w, r, w, o, w, r, r, r],
+               [w, w, w, w, o, w, r, w, r, r, r, w, r, w, o, w, w, w, w],
+               [r, r, r, r, o, r, r, w, r, r, r, w, r, r, o, r, r, r, r],
+               [w, w, w, w, o, w, r, w, r, r, r, w, r, w, o, w, w, w, w],
+               [r, r, r, w, o, w, r, w, w, w, w, w, r, w, o, w, r, r, r],
+               [r, r, r, w, o, w, r, r, r, r, r, r, r, w, o, w, r, r, r],
+               [w, w, w, w, o, w, r, w, w, w, w, w, r, w, o, w, w, w, w],                # map represented in text.
+               [w, o, o, o, o, o, o, o, o, w, o, o, o, o, o, o, o, o, w],
+               [w, o, w, w, o, w, w, w, o, w, o, w, w, w, o, w, w, o, w],
+               [w, o, o, w, o, o, o, o, o, o, o, o, o, o, o, w, o, o, w],
+               [w, w, o, w, o, w, o, w, w, w, w, w, o, w, o, w, o, w, w],
+               [w, o, o, o, o, w, o, o, o, w, o, o, o, w, o, o, o, o, w],
+               [w, o, w, w, w, w, w, w, o, w, o, w, w, w, w, w, w, o, w],
+               [w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
+               [w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w]]
+
+    for row in range(19):
+        for col in range(24):
+            pygame.draw.rect(background, rgbgrid[col][row], biggrid[row][col])         # draws the rects, data can not be collected
+            '''if rgbgrid[col][row] == r:
+                biggrid[row][col] = pygame.draw.circle(background, (255, 255, 255), (row * 20 + 10, col * 20 + 10), 3)'''
+    # background.fill((0, 0, 0))
+    '''for row in range(19):
+        for col in range(24):
+            pygame.draw.rect(background, (row*10, col*10, 100), biggrid[row][col])'''
+
+    if needs:
+        return (rgbgrid, biggrid)
+
 
 def collide(background, x, y):                 # returns array consisting of the possible movements the player can make
-    grid1 = Grid
-    rgbgrid = grid1.rgbgrid
-    biggrid = grid1.biggrid
+    rgbgrid = grid(background, size, True)[0]
+    biggrid = grid(background, size, True)[1]
     coordgrid = []
     for row in range(19):
         for col in range(24):
@@ -38,6 +88,7 @@ def collide(background, x, y):                 # returns array consisting of the
     # print(works)
     return works
 
+
 def move(background, player, direct, size):
     y = player.getY()
     x = player.getX()
@@ -55,9 +106,8 @@ def move(background, player, direct, size):
         elif direct == "rt":
             player.setX(x + size)
             player.setFace(4)
-    time.sleep(0.07)
+    time.sleep(0.06)
     return player
-
 
 def window(size):
     # initialise screen
@@ -73,8 +123,10 @@ def window(size):
     # Event loop
     reps = toggle = score = 0
     slide1 = slidenext = "1"
+    pointloc = player1.points(background, player1, grid(background, size, True)[0])
     while True:
-        player1.points(background, player1)
+        font = pygame.font.SysFont("franklingothicbook", int (size * 2.5))
+        scoreboard = font.render("SCORE: " + str (score), True, (255, 255, 255))
         if reps == 6:
             reps = 0
         for event in pygame.event.get():
@@ -93,9 +145,18 @@ def window(size):
                 if event.key == pygame.K_0:
                     print("(" + str (player1.getX()) + ", " + str (player1.getY()) + ")")
         ghosts = [inky, blinky, pinky, clyde]
+
+        y = player1.getY()
+        x = player1.getX()
+        for row in range(19):
+            for col in range(24):
+                if (x == row * 20 + 10) and (y == col * 20 + 10):
+                    if pointloc[col][row] != 1:
+                        pointloc[col][row] = 1
+                        score += 200
+                        print(score)
+
         if not slide1 == "":
-            y = player1.getY()
-            x = player1.getX()
             if slide1 == "lft" and x <= 10 and y == 230:
                 player1.setX(380)
             elif slide1 == "rt" and x >= 370 and y == 230:
@@ -109,8 +170,9 @@ def window(size):
             reps += 1
             if reps % 3 == 0:
                 toggle = not toggle
-        player1.draw(background, player1, toggle, size, ghosts)
+        player1.draw(background, player1, toggle, size, ghosts, pointloc)
         screen.blit(background, (0, 0))
+        screen.blit(scoreboard, (0, 0))
         pygame.display.flip()
 
 
