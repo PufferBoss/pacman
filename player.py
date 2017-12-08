@@ -37,24 +37,20 @@ class Player:      #player class is pacman himself
     def setScore(self, obj):
         self.score = obj
 
-    def points(self, background, player):
+    def points(self, background, player, rgbgrid):
         x = player.getX
         y = player.getY
-        from mapgrid import Grid
-        level = Grid
-        pacdot = level.getbiggrid()
+        pacdot = rgbgrid
         for row in range(19):
             for col in range(24):
                 if pacdot[col][row] == (0, 0, 0):
                     pacdot[col][row] = pygame.rect.Rect(row * 20 + 10, col * 20 + 10, 3, 3)
-                    if (x == row * 20 + 10) and (y == col * 20 + 10):
-                        pacdot[col][row] = 1
-                        print("dling")
+                    pygame.draw.rect(background, (255, 255, 255), pacdot[col][row])
                 else:
                     pacdot[col][row] = 1
         return pacdot
 
-    def draw(self, background, player, toggle, rad, ghosts):
+    def draw(self, background, player, toggle, rad, ghosts, pointloc):
         inky = ghosts[0]
         blinky = ghosts[1]
         pinky = ghosts[2]
@@ -85,14 +81,10 @@ class Player:      #player class is pacman himself
             x2 = x + rad
             y2 = y - rad - 2
 
-        from mapgrid import Grid
-        level = Grid
-        level.graph(background, level.rgbgrid, level.biggrid)
-        dotgrid = self.points(background, player)
         for row in range(19):
             for col in range(24):
-                if not dotgrid[col][row] == 1:
-                    pygame.draw.rect(background, (255, 255, 255), dotgrid[col][row])
+                if not pointloc[col][row] == 1:
+                    pygame.draw.rect(background, (255, 255, 255), pointloc[col][row])
         pygame.draw.circle(background, (255, 255, 0), (x, y), rad)  # draws circle
         if toggle:
             pygame.draw.polygon(background, (0, 0, 0), [[x, y], [x1, y1], [x2, y2]])  # does it draw the triangle or not
@@ -100,8 +92,3 @@ class Player:      #player class is pacman himself
         Ghost.drawghost(background, blinky, rad)
         Ghost.drawghost(background, pinky, rad)
         Ghost.drawghost(background, clyde, rad)
-        '''dotgrid = self.points(background)
-        for row in range(19):
-            for col in range(24):
-                if not dotgrid[col][row] == 1:
-                    pygame.draw.rect(background, (255, 255, 255), dotgrid[col][row])'''
