@@ -8,6 +8,7 @@ from ghost import Ghost
 def grid(background, size, needs):
     o = (0, 0, 0)
     w = (0, 0, 255)
+    z = (2, 2, 2)
     t = (255, 0, 128)
     r = (1, 1, 1)
     biggrid = [[0] * 24 for n in range(19)]
@@ -20,7 +21,7 @@ def grid(background, size, needs):
     rgbgrid = [[r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r],
                [w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w],
                [w, o, o, o, o, o, o, o, o, w, o, o, o, o, o, o, o, o, w],
-               [w, o, w, w, o, w, w, w, o, w, o, w, w, w, o, w, w, o, w],
+               [w, z, w, w, o, w, w, w, o, w, o, w, w, w, o, w, w, z, w],
                [w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
                [w, o, w, w, o, w, o, w, w, w, w, w, o, w, o, w, w, o, w],
                [w, o, o, o, o, w, o, o, o, w, o, o, o, w, o, o, o, o, w],
@@ -34,7 +35,7 @@ def grid(background, size, needs):
                [r, r, r, w, o, w, r, r, r, r, r, r, r, w, o, w, r, r, r],
                [w, w, w, w, o, w, r, w, w, w, w, w, r, w, o, w, w, w, w],                # map represented in text.
                [w, o, o, o, o, o, o, o, o, w, o, o, o, o, o, o, o, o, w],
-               [w, o, w, w, o, w, w, w, o, w, o, w, w, w, o, w, w, o, w],
+               [w, z, w, w, o, w, w, w, o, w, o, w, w, w, o, w, w, z, w],
                [w, o, o, w, o, o, o, o, o, o, o, o, o, o, o, w, o, o, w],
                [w, w, o, w, o, w, o, w, w, w, w, w, o, w, o, w, o, w, w],
                [w, o, o, o, o, w, o, o, o, w, o, o, o, w, o, o, o, o, w],
@@ -55,6 +56,21 @@ def grid(background, size, needs):
     if needs:
         return (rgbgrid, biggrid)
 
+def colorswitch(ghosts, mode):
+    inky = ghosts[0]
+    blinky = ghosts[1]
+    pinky = ghosts[2]
+    clyde = ghosts[3]
+    if mode:
+        inky.setColor((0, 0, 255))
+        blinky.setColor((0, 0, 255))
+        pinky.setColor((0, 0, 255))
+        clyde.setColor((0, 0, 255))
+    else:
+        inky.setColor((0, 255, 255))
+        blinky.setColor((255, 0, 0))
+        pinky.setColor((255, 102, 255))
+        clyde.setColor((255, 128, 0))
 
 def collide(background, x, y):                 # returns array consisting of the possible movements the player can make
     rgbgrid = grid(background, size, True)[0]
@@ -62,7 +78,7 @@ def collide(background, x, y):                 # returns array consisting of the
     coordgrid = []
     for row in range(19):
         for col in range(24):
-            if rgbgrid[col][row] == (0, 0, 0) or rgbgrid[col][row] == (1, 1, 1):
+            if rgbgrid[col][row] == (0, 0, 0) or rgbgrid[col][row] == (1, 1, 1) or rgbgrid[col][row] == (2, 2, 2):
                 coord = [biggrid[row][col].left, biggrid[row][col].top]
                 coordgrid.append(coord)
     up = [x - 10, y - 30]
@@ -88,7 +104,6 @@ def collide(background, x, y):                 # returns array consisting of the
     # print(works)
     return works
 
-
 def move(background, player, direct, size):
     y = player.getY()
     x = player.getX()
@@ -109,6 +124,18 @@ def move(background, player, direct, size):
     time.sleep(0.06)
     return player
 
+def keytype(keys):
+    slidenext = "1"
+    if keys[pygame.K_w] or keys[pygame.K_UP]:
+        slidenext = "up"
+    if keys[pygame.K_a] or keys[pygame.K_LEFT]:
+        slidenext = "lft"
+    if keys[pygame.K_s] or keys[pygame.K_DOWN]:
+        slidenext = "dn"
+    if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
+        slidenext = "rt"
+    return slidenext
+
 def window(size):
     # initialise screen
     pygame.init()
@@ -121,7 +148,7 @@ def window(size):
     pinky = Ghost(210, 210, (255, 102, 255))
     clyde = Ghost(170, 250, (255, 128, 0))
     # Event loop
-    reps = toggle = score = 0
+    reps = toggle = strttime = score = 0
     slide1 = slidenext = "1"
     pointloc = player1.points(background, player1, grid(background, size, True)[0])
     while True:
@@ -134,28 +161,27 @@ def window(size):
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
                 keys = pygame.key.get_pressed()
-                if keys[pygame.K_w] or keys[pygame.K_UP]:
-                    slidenext = "up"
-                if keys[pygame.K_a] or keys[pygame.K_LEFT]:
-                    slidenext = "lft"
-                if keys[pygame.K_s] or keys[pygame.K_DOWN]:
-                    slidenext = "dn"
-                if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
-                    slidenext = "rt"
+                slidenext = keytype(keys)
                 if event.key == pygame.K_0:
                     print("(" + str (player1.getX()) + ", " + str (player1.getY()) + ")")
         ghosts = [inky, blinky, pinky, clyde]
-
         y = player1.getY()
         x = player1.getX()
         for row in range(19):
             for col in range(24):
                 if (x == row * 20 + 10) and (y == col * 20 + 10):
-                    if pointloc[col][row] != 1:
-                        pointloc[col][row] = 1
+                    if pointloc[col][row] == 2:
+                        score += 600
+                        player1.setGod(True)
+                        strttime = time.time()
+                    if not pointloc[col][row] == 1:
                         score += 200
-                        print(score)
-
+                    pointloc[col][row] = 1
+        if time.time() > strttime + 8:
+            player1.setGod(False)
+            colorswitch(ghosts, False)
+        if player1.getGod():
+            colorswitch(ghosts, True)
         if not slide1 == "":
             if slide1 == "lft" and x <= 10 and y == 230:
                 player1.setX(380)
