@@ -5,7 +5,7 @@ from player import Player
 from ghost import Ghost
 
 
-def grid(background, size, needs):
+def grid(surface, size, needs):
     o = (0, 0, 0)
     w = (0, 0, 255)
     z = (2, 2, 2)
@@ -45,16 +45,16 @@ def grid(background, size, needs):
 
     for row in range(19):
         for col in range(24):
-            pygame.draw.rect(background, rgbgrid[col][row], biggrid[row][col])         # draws the rects, data can not be collected
+            pygame.draw.rect(surface, rgbgrid[col][row], biggrid[row][col])         # draws the rects, data can not be collected
             '''if rgbgrid[col][row] == r:
-                biggrid[row][col] = pygame.draw.circle(background, (255, 255, 255), (row * 20 + 10, col * 20 + 10), 3)'''
-    # background.fill((0, 0, 0))
+                biggrid[row][col] = pygame.draw.circle(surface, (255, 255, 255), (row * 20 + 10, col * 20 + 10), 3)'''
+    # surface.fill((0, 0, 0))
     '''for row in range(19):
         for col in range(24):
-            pygame.draw.rect(background, (row*10, col*10, 100), biggrid[row][col])'''
+            pygame.draw.rect(surface, (row*10, col*10, 100), biggrid[row][col])'''
 
     if needs:
-        return (rgbgrid, biggrid)
+        return rgbgrid, biggrid
 
 def colorswitch(ghosts, mode):
     inky = ghosts[0]
@@ -62,19 +62,18 @@ def colorswitch(ghosts, mode):
     pinky = ghosts[2]
     clyde = ghosts[3]
     if mode:
-        inky.setColor((0, 0, 255))
-        blinky.setColor((0, 0, 255))
-        pinky.setColor((0, 0, 255))
-        clyde.setColor((0, 0, 255))
+        inky.color = (0, 0, 255)
+        blinky.color = (0, 0, 255)
+        pinky.color = (0, 0, 255)
+        clyde.color = (0, 0, 255)
     else:
-        inky.setColor((0, 255, 255))
-        blinky.setColor((255, 0, 0))
-        pinky.setColor((255, 102, 255))
-        clyde.setColor((255, 128, 0))
+        inky.color = (0, 255, 255)
+        blinky.color = (255, 0, 0)
+        pinky.color = (255, 102, 255)
+        clyde.color = (255, 128, 0)
 
-def collide(background, x, y):                 # returns array consisting of the possible movements the player can make
-    rgbgrid = grid(background, size, True)[0]
-    biggrid = grid(background, size, True)[1]
+def collide(surface, x, y):                 # returns array consisting of the possible movements the player can make
+    rgbgrid, biggrid = grid(surface, size, True)
     coordgrid = []
     for row in range(19):
         for col in range(24):
@@ -104,26 +103,6 @@ def collide(background, x, y):                 # returns array consisting of the
     # print(works)
     return works
 
-def move(background, player, direct, size):
-    y = player.getY()
-    x = player.getX()
-
-    if direct in collide(background, x, y):
-        if direct == "up":
-            player.setY(y - size)
-            player.setFace(1)
-        elif direct == "dn":
-            player.setY(y + size)
-            player.setFace(3)
-        elif direct == "lft":
-            player.setX(x - size)
-            player.setFace(2)
-        elif direct == "rt":
-            player.setX(x + size)
-            player.setFace(4)
-    time.sleep(0.06)
-    return player
-
 def keytype(keys):
     slidenext = "1"
     if keys[pygame.K_w] or keys[pygame.K_UP]:
@@ -141,7 +120,7 @@ def window(size):
     pygame.init()
     screen = pygame.display.set_mode((int(38 * size), 48 * size))
     pygame.display.set_caption('PACMAN')
-    background = pygame.Surface(screen.get_size())
+    surface = pygame.Surface(screen.get_size())
     player1 = Player()
     inky = Ghost(210, 250, (0, 255, 255))
     blinky = Ghost(170, 210, (255, 0, 0))
@@ -150,9 +129,9 @@ def window(size):
     # Event loop
     reps = toggle = strttime = score = 0
     slide1 = slidenext = "1"
-    pointloc = player1.points(background, player1, grid(background, size, True)[0])
+    pointloc = player1.points(surface, grid(surface, size, True)[0])
     while True:
-        font = pygame.font.SysFont("franklingothicbook", int (size * 2.5))
+        font = pygame.font.SysFont("franklingothicbook", int (size * 1.7))
         scoreboard = font.render("SCORE: " + str (score), True, (255, 255, 255))
         if reps == 6:
             reps = 0
@@ -163,41 +142,41 @@ def window(size):
                 keys = pygame.key.get_pressed()
                 slidenext = keytype(keys)
                 if event.key == pygame.K_0:
-                    print("(" + str (player1.getX()) + ", " + str (player1.getY()) + ")")
+                    print("(" + str (player1.xloc) + ", " + str (player1.yloc) + ")")
         ghosts = [inky, blinky, pinky, clyde]
-        y = player1.getY()
-        x = player1.getX()
+        y = player1.yloc
+        x = player1.xloc
         for row in range(19):
             for col in range(24):
                 if (x == row * 20 + 10) and (y == col * 20 + 10):
                     if pointloc[col][row] == 2:
                         score += 600
-                        player1.setGod(True)
+                        player1.god = True
                         strttime = time.time()
                     if not pointloc[col][row] == 1:
                         score += 200
                     pointloc[col][row] = 1
-        if time.time() > strttime + 8:
-            player1.setGod(False)
+        if time.time() > strttime + 5:
+            player1.god = False
             colorswitch(ghosts, False)
-        if player1.getGod():
+        if player1.god:
             colorswitch(ghosts, True)
         if not slide1 == "":
             if slide1 == "lft" and x <= 10 and y == 230:
-                player1.setX(380)
+                player1.xloc = 380
             elif slide1 == "rt" and x >= 370 and y == 230:
-                player1.setX(0)
-            if slidenext in collide(background, x, y):
-                player1 = move(background, player1, slidenext, size)
+                player1.xloc = 0
+            if slidenext in collide(surface, x, y):
+                player1 = player1.move(surface, slidenext, size)
                 slide1 = slidenext
                 slidenext = ""
             else:
-                player1 = move(background, player1, slide1, size)
+                player1 = player1.move(surface, slide1, size)
             reps += 1
             if reps % 3 == 0:
                 toggle = not toggle
-        player1.draw(background, player1, toggle, size, ghosts, pointloc)
-        screen.blit(background, (0, 0))
+        player1.draw(surface, toggle, size, ghosts, pointloc)
+        screen.blit(surface, (0, 0))
         screen.blit(scoreboard, (0, 0))
         pygame.display.flip()
 
