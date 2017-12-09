@@ -22,6 +22,9 @@ class Player:      #player class is pacman himself
     def getFace(self):
         return self.face
 
+    def getGod(self):
+        return self.god
+
     def getScore(self):
         return self.score
 
@@ -33,6 +36,9 @@ class Player:      #player class is pacman himself
 
     def setFace(self, obj):
         self.face = obj
+
+    def setGod(self, obj):
+        self.god = obj
 
     def setScore(self, obj):
         self.score = obj
@@ -46,6 +52,8 @@ class Player:      #player class is pacman himself
                 if pacdot[col][row] == (0, 0, 0):
                     pacdot[col][row] = pygame.rect.Rect(row * 20 + 10, col * 20 + 10, 3, 3)
                     pygame.draw.rect(background, (255, 255, 255), pacdot[col][row])
+                elif pacdot[col][row] == (2, 2, 2):
+                    pacdot[col][row] = 2
                 else:
                     pacdot[col][row] = 1
         return pacdot
@@ -83,8 +91,10 @@ class Player:      #player class is pacman himself
 
         for row in range(19):
             for col in range(24):
-                if not pointloc[col][row] == 1:
+                if not pointloc[col][row] == 1 and not pointloc[col][row] == 2:
                     pygame.draw.rect(background, (255, 255, 255), pointloc[col][row])
+                elif pointloc[col][row] == 2:
+                    pygame.draw.circle(background, (255, 255, 255), (row * 20 + 10, col * 20 + 10), 5)
         pygame.draw.circle(background, (255, 255, 0), (x, y), rad)  # draws circle
         if toggle:
             pygame.draw.polygon(background, (0, 0, 0), [[x, y], [x1, y1], [x2, y2]])  # does it draw the triangle or not
