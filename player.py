@@ -6,12 +6,15 @@ from ghost import Ghost
 
 class Player:      #player class is pacman himself
 
-    def __init__(self, xloc=190, yloc=350, face=1, score = 0, god=False):
+    def __init__(self, surface, xloc=190, yloc=350, face=1, score = 0, god=False, slide = 1, slidenext = 1):
         self.xloc = xloc
         self.yloc = yloc
         self.face = face
         self.score = score
         self.god = god
+        self.surface = surface
+        self.slide = slide
+        self.slidenext = slidenext
 
     def getScore(self):
         return self.score
@@ -19,7 +22,7 @@ class Player:      #player class is pacman himself
     def setScore(self, obj):
         self.score = obj
 
-    def points(self, surface, rgbgrid):
+    def points(self, rgbgrid):
         x = self.xloc
         y = self.yloc
         pacdot = rgbgrid
@@ -27,14 +30,14 @@ class Player:      #player class is pacman himself
             for col in range(23):
                 if pacdot[col][row] == (0, 0, 0):
                     pacdot[col][row] = pygame.rect.Rect(row * 20 + 10, col * 20 + 10, 3, 3)
-                    pygame.draw.rect(surface, (255, 255, 255), pacdot[col][row])
+                    pygame.draw.rect(self.surface, (255, 255, 255), pacdot[col][row])
                 elif pacdot[col][row] == (2, 2, 2):
                     pacdot[col][row] = 2
                 else:
                     pacdot[col][row] = 1
         return pacdot
 
-    def draw(self, surface, toggle, rad, ghosts, pointloc):
+    def draw(self, toggle, rad, ghosts, pointloc):
         inky = ghosts[0]
         blinky = ghosts[1]
         pinky = ghosts[2]
@@ -68,23 +71,23 @@ class Player:      #player class is pacman himself
         for row in range(19):
             for col in range(23):
                 if not pointloc[col][row] == 1 and not pointloc[col][row] == 2:
-                    pygame.draw.rect(surface, (255, 255, 255), pointloc[col][row])
+                    pygame.draw.rect(self.surface, (255, 255, 255), pointloc[col][row])
                 elif pointloc[col][row] == 2:
-                    pygame.draw.circle(surface, (255, 255, 255), (row * 20 + 10, col * 20 + 10), 5)
-        pygame.draw.circle(surface, (255, 255, 0), (x, y), rad)  # draws circle
+                    pygame.draw.circle(self.surface, (255, 255, 255), (row * 20 + 10, col * 20 + 10), 5)
+        pygame.draw.circle(self.surface, (255, 255, 0), (x, y), rad)  # draws circle
         if toggle:
-            pygame.draw.polygon(surface, (0, 0, 0), [[x, y], [x1, y1], [x2, y2]])  # does it draw the triangle or not
-        Ghost.drawghost(surface, inky, rad)
-        Ghost.drawghost(surface, blinky, rad)
-        Ghost.drawghost(surface, pinky, rad)
-        Ghost.drawghost(surface, clyde, rad)
+            pygame.draw.polygon(self.surface, (0, 0, 0), [[x, y], [x1, y1], [x2, y2]])  # does it draw the triangle or not
+        Ghost.drawghost(inky, rad)
+        Ghost.drawghost(blinky, rad)
+        Ghost.drawghost(pinky, rad)
+        Ghost.drawghost(clyde, rad)
 
-    def move(self, surface, direct, size):
+    def move(self, direct, size):
         from main import collide
         y = self.yloc
         x = self.xloc
 
-        if direct in collide(surface, x, y):
+        if direct in collide(self.surface, x, y):
             if direct == "up":
                 self.yloc = (y - size)
                 self.face = 1
