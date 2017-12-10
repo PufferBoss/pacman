@@ -6,7 +6,7 @@ from ghost import Ghost
 
 class Player:      #player class is pacman himself
 
-    def __init__(self, surface, xloc=190, yloc=350, face=1, score = 0, god=False, slide = 1, slidenext = 1):
+    def __init__(self, surface, size, xloc=190, yloc=350, face=1, score = 0, god=False, slide = 1, slidenext = 1):
         self.xloc = xloc
         self.yloc = yloc
         self.face = face
@@ -15,6 +15,7 @@ class Player:      #player class is pacman himself
         self.surface = surface
         self.slide = slide
         self.slidenext = slidenext
+        self.size = size
 
     def getScore(self):
         return self.score
@@ -29,7 +30,7 @@ class Player:      #player class is pacman himself
         for row in range(19):
             for col in range(23):
                 if pacdot[col][row] == (0, 0, 0):
-                    pacdot[col][row] = pygame.rect.Rect(row * 20 + 10, col * 20 + 10, 3, 3)
+                    pacdot[col][row] = pygame.rect.Rect(row * self.size * 2 + 10, col * self.size * 2 + 10, 3, 3)
                     pygame.draw.rect(self.surface, (255, 255, 255), pacdot[col][row])
                 elif pacdot[col][row] == (2, 2, 2):
                     pacdot[col][row] = 2

@@ -3,6 +3,7 @@ from pygame.locals import *
 import time
 from player import Player
 from ghost import Ghost
+from window import Window
 
 
 def grid(surface, size, needs):
@@ -58,7 +59,7 @@ def grid(surface, size, needs):
     if needs:
         return rgbgrid, biggrid
 
-def colorswitch(ghosts, mode):
+def colorswitch(ghosts, mode, window):
     inky = ghosts[0]
     blinky = ghosts[1]
     pinky = ghosts[2]
@@ -69,6 +70,7 @@ def colorswitch(ghosts, mode):
         pinky.color = (0, 0, 255)
         clyde.color = (0, 0, 255)
     else:
+        window.player.god = False
         inky.color = (0, 255, 255)
         blinky.color = (255, 0, 0)
         pinky.color = (255, 102, 255)
@@ -106,6 +108,7 @@ def collide(surface, x, y):
     # print(works)
     return works
 
+
 # finds the type of key that was pressed and assigns a function
 def keytype(keys, player):
     if keys[pygame.K_w] or keys[pygame.K_UP]:
@@ -118,22 +121,19 @@ def keytype(keys, player):
         player.slidenext = "rt"
     return player.slidenext
 
-def window(size):
-    # initialise screen
-    from window import Window
+
+def window(size): # initialise screen
     pygame.init()
     screen = pygame.display.set_mode((int(38 * size), 48 * size))
     pygame.display.set_caption('PACMAN')
     surface = pygame.Surface(screen.get_size())
-    w1 = Window(surface, Player(surface),
-                Ghost(surface, 210, 250, (0, 255, 255)), Ghost(surface, 170, 210, (255, 0, 0)),
+    w1 = Window(surface, Player(surface, size),Ghost(surface, 210, 250, (0, 255, 255)), Ghost(surface, 170, 210, (255, 0, 0)),
                 Ghost(surface, 210, 210, (255, 102, 255)), Ghost(surface, 170, 250, (255, 128, 0)))
-    # Event loop
-    reps = toggle = strttime = score = 0
+    reps = toggle = strttime = 0
     pointloc = w1.player.points(grid(surface, size, True)[0])
-    while True:
+    while True:    # main loop
         font = pygame.font.SysFont("franklingothicbook", int (size * 1.7))
-        scoreboard = font.render("SCORE: " + str (score), True, (255, 255, 255))
+        scoreboard = font.render("SCORE: " + str (w1.player.score), True, (255, 255, 255))
         if reps == 6:
             reps = 0
         for event in pygame.event.get():
@@ -142,40 +142,33 @@ def window(size):
             elif event.type == pygame.KEYDOWN:
                 keys = pygame.key.get_pressed()
                 w1.player.slidenext = keytype(keys, w1.player)
-                if event.key == pygame.K_0:
-                    print("(" + str (w1.player.xloc) + ", " + str (w1.player.yloc) + ")")
-        ghosts = [w1.inky, w1.blinky, w1.pinky, w1.clyde]
-        y = w1.player.yloc
-        x = w1.player.xloc
+        x, y, ghosts = w1.player.xloc, w1.player.yloc, [w1.inky, w1.blinky, w1.pinky, w1.clyde]
         for row in range(19):
             for col in range(24):
-                if (x == row * 20 + 10) and (y == col * 20 + 10):
+                if (x == row * size * 2 + 10) and (y == col * size * 2 + 10):
                     if pointloc[col][row] == 2:
-                        score += 600
+                        w1.player.score += 600
                         w1.player.god = True
                         strttime = time.time()
                     if not pointloc[col][row] == 1:
-                        score += 200
+                        w1.player.score += 200
                     pointloc[col][row] = 1
-        if time.time() > strttime + 5:
-            w1.player.god = False
-            colorswitch(ghosts, False)
+        if time.time() >  strttime + 5:
+            colorswitch(ghosts, False, w1)
         if w1.player.god:
-            colorswitch(ghosts, True)
-        if not w1.player.slide == "":
-            if w1.player.slide == "lft" and x <= 10 and y == 230:
-                w1.player.xloc = 380
-            elif w1.player.slide == "rt" and x >= 370 and y == 230:
-                w1.player.xloc = 0
-            if w1.player.slidenext in collide(surface, x, y):
-                w1.player = w1.player.move(w1.player.slidenext, size)
-                w1.player.slide = w1.player.slidenext
-                w1.player.slidenext = ""
-            else:
-                w1.player = w1.player.move(w1.player.slide, size)
-            reps += 1
-            if reps % 3 == 0:
-                toggle = not toggle
+            colorswitch(ghosts, True, w1)
+        if w1.player.slide == "lft" and x <= 10:
+            w1.player.xloc = 380
+        elif w1.player.slide == "rt" and x >= 370:
+            w1.player.xloc = 0
+        if w1.player.slidenext in collide(surface, x, y):
+            w1.player = w1.player.move(w1.player.slidenext, size)
+            w1.player.slide = w1.player.slidenext
+        else:
+            w1.player = w1.player.move(w1.player.slide, size)
+        reps += 1
+        if reps % 3 == 0:
+            toggle = not toggle
         w1.player.draw(toggle, size, ghosts, pointloc)
         screen.blit(surface, (0, 0))
         screen.blit(scoreboard, (0, 0))
