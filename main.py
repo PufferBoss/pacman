@@ -4,9 +4,10 @@ import time
 from player import Player
 from ghost import Ghost
 from window import Window
+from map import Map
 
 
-def grid(surface, size, needs):
+def initmap(surface):
     o = (0, 0, 0)
     w = (0, 0, 255)
     z = (2, 2, 2)
@@ -45,19 +46,8 @@ def grid(surface, size, needs):
                [w, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, o, w],
                [w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w]]
 
-    for row in range(19):
-        for col in range(24):
-            # draws the rects, data can not be collected
-            pygame.draw.rect(surface, rgbgrid[col][row], rectgrid[row][col])
-            '''if rgbgrid[col][row] == r:
-                rectgrid[row][col] = pygame.draw.circle(surface, (255, 255, 255), (row * 20 + 10, col * 20 + 10), 3)'''
-    # surface.fill((0, 0, 0))
-    '''for row in range(19):
-        for col in range(24):
-            pygame.draw.rect(surface, (row*10, col*10, 100), rectgrid[row][col])'''
-
-    if needs:
-        return rgbgrid, rectgrid
+    gamemap = Map(surface, rectgrid, rgbgrid)
+    return gamemap
 
 def colorswitch(ghosts, mode, window):
     inky = ghosts[0]
@@ -76,9 +66,10 @@ def colorswitch(ghosts, mode, window):
         pinky.color = (255, 102, 255)
         clyde.color = (255, 128, 0)
 
+
 # returns array consisting of the possible movements the player can make
 def collide(surface, x, y):
-    rgbgrid, rectgrid = grid(surface, size, True)
+    rgbgrid, rectgrid = initmap(surface).rgbgrid, initmap(surface).rectgrid
     coordgrid = []
     for row in range(19):
         for col in range(24):
@@ -128,10 +119,11 @@ def window(size): # initialise screen
     pygame.display.set_caption('PACMAN')
     surface = pygame.Surface(screen.get_size())
     w1 = Window(surface, Player(surface, size),Ghost(surface, 210, 250, (0, 255, 255)), Ghost(surface, 170, 210, (255, 0, 0)),
-                Ghost(surface, 210, 210, (255, 102, 255)), Ghost(surface, 170, 250, (255, 128, 0)))
+                Ghost(surface, 210, 210, (255, 102, 255)), Ghost(surface, 170, 250, (255, 128, 0)), initmap(surface))
     reps = mouth = strttime = 0
-    pointgrid = w1.player.points(grid(surface, size, True)[0])
+    pointgrid = w1.player.points(w1.map.rgbgrid)
     while True:    # main loop
+        initmap(surface).drawmap()
         font = pygame.font.SysFont("franklingothicbook", int (size * 1.7))
         scoreboard = font.render("SCORE: " + str (w1.player.score), True, (255, 255, 255))
         if reps == 6:
@@ -151,7 +143,7 @@ def window(size): # initialise screen
                         w1.player.eats = True
                         strttime = time.time()
                     if not pointgrid[col][row] == 1:
-                        w1.player.score += 200
+                        w1.player.score += 100
                     pointgrid[col][row] = 1
         if time.time() >  strttime + 5:
             colorswitch(ghosts, False, w1)
