@@ -6,15 +6,15 @@ from ghost import Ghost
 
 class Player:      #player class is pacman himself
 
-    def __init__(self, surface, size, xloc=190, yloc=350, face=1, score = 0, god=False, slide = 1, slidenext = 1):
+    def __init__(self, surface, size, xloc=190, yloc=350, face=1, score = 0, eats=False, turn = 1, turnnext = 1):
         self.xloc = xloc
         self.yloc = yloc
         self.face = face
         self.score = score
-        self.god = god
+        self.eats = eats
         self.surface = surface
-        self.slide = slide
-        self.slidenext = slidenext
+        self.turn = turn
+        self.turnnext = turnnext
         self.size = size
 
     def getScore(self):

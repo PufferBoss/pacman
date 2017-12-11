@@ -12,10 +12,10 @@ def grid(surface, size, needs):
     z = (2, 2, 2)
     t = (255, 0, 128)
     r = (1, 1, 1)
-    biggrid = [[0] * 24 for n in range(19)]
+    rectgrid = [[0] * 24 for n in range(19)]
     for row in range(19):
         for col in range(24):
-            biggrid[row][col] = pygame.rect.Rect(row * size * 2, col * size * 2, size * 2, size * 2)
+            rectgrid[row][col] = pygame.rect.Rect(row * size * 2, col * size * 2, size * 2, size * 2)
 
             # make grid but doesnt draw. rect can be toyed with
 
@@ -48,16 +48,16 @@ def grid(surface, size, needs):
     for row in range(19):
         for col in range(24):
             # draws the rects, data can not be collected
-            pygame.draw.rect(surface, rgbgrid[col][row], biggrid[row][col])
+            pygame.draw.rect(surface, rgbgrid[col][row], rectgrid[row][col])
             '''if rgbgrid[col][row] == r:
-                biggrid[row][col] = pygame.draw.circle(surface, (255, 255, 255), (row * 20 + 10, col * 20 + 10), 3)'''
+                rectgrid[row][col] = pygame.draw.circle(surface, (255, 255, 255), (row * 20 + 10, col * 20 + 10), 3)'''
     # surface.fill((0, 0, 0))
     '''for row in range(19):
         for col in range(24):
-            pygame.draw.rect(surface, (row*10, col*10, 100), biggrid[row][col])'''
+            pygame.draw.rect(surface, (row*10, col*10, 100), rectgrid[row][col])'''
 
     if needs:
-        return rgbgrid, biggrid
+        return rgbgrid, rectgrid
 
 def colorswitch(ghosts, mode, window):
     inky = ghosts[0]
@@ -70,7 +70,7 @@ def colorswitch(ghosts, mode, window):
         pinky.color = (0, 0, 255)
         clyde.color = (0, 0, 255)
     else:
-        window.player.god = False
+        window.player.eats = False
         inky.color = (0, 255, 255)
         blinky.color = (255, 0, 0)
         pinky.color = (255, 102, 255)
@@ -78,12 +78,12 @@ def colorswitch(ghosts, mode, window):
 
 # returns array consisting of the possible movements the player can make
 def collide(surface, x, y):
-    rgbgrid, biggrid = grid(surface, size, True)
+    rgbgrid, rectgrid = grid(surface, size, True)
     coordgrid = []
     for row in range(19):
         for col in range(24):
             if rgbgrid[col][row] == (0, 0, 0) or rgbgrid[col][row] == (1, 1, 1) or rgbgrid[col][row] == (2, 2, 2):
-                coord = [biggrid[row][col].left, biggrid[row][col].top]
+                coord = [rectgrid[row][col].left, rectgrid[row][col].top]
                 coordgrid.append(coord)
     up = [x - 10, y - 30]
     up2 = [x - 10, y - 20]
@@ -112,14 +112,14 @@ def collide(surface, x, y):
 # finds the type of key that was pressed and assigns a function
 def keytype(keys, player):
     if keys[pygame.K_w] or keys[pygame.K_UP]:
-        player.slidenext = "up"
+        player.turnnext = "up"
     if keys[pygame.K_a] or keys[pygame.K_LEFT]:
-        player.slidenext = "lft"
+        player.turnnext = "lft"
     if keys[pygame.K_s] or keys[pygame.K_DOWN]:
-        player.slidenext = "dn"
+        player.turnnext = "dn"
     if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
-        player.slidenext = "rt"
-    return player.slidenext
+        player.turnnext = "rt"
+    return player.turnnext
 
 
 def window(size): # initialise screen
@@ -129,8 +129,8 @@ def window(size): # initialise screen
     surface = pygame.Surface(screen.get_size())
     w1 = Window(surface, Player(surface, size),Ghost(surface, 210, 250, (0, 255, 255)), Ghost(surface, 170, 210, (255, 0, 0)),
                 Ghost(surface, 210, 210, (255, 102, 255)), Ghost(surface, 170, 250, (255, 128, 0)))
-    reps = toggle = strttime = 0
-    pointloc = w1.player.points(grid(surface, size, True)[0])
+    reps = mouth = strttime = 0
+    pointgrid = w1.player.points(grid(surface, size, True)[0])
     while True:    # main loop
         font = pygame.font.SysFont("franklingothicbook", int (size * 1.7))
         scoreboard = font.render("SCORE: " + str (w1.player.score), True, (255, 255, 255))
@@ -141,35 +141,35 @@ def window(size): # initialise screen
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
                 keys = pygame.key.get_pressed()
-                w1.player.slidenext = keytype(keys, w1.player)
+                w1.player.turnnext = keytype(keys, w1.player)
         x, y, ghosts = w1.player.xloc, w1.player.yloc, [w1.inky, w1.blinky, w1.pinky, w1.clyde]
         for row in range(19):
             for col in range(24):
                 if (x == row * size * 2 + 10) and (y == col * size * 2 + 10):
-                    if pointloc[col][row] == 2:
+                    if pointgrid[col][row] == 2:
                         w1.player.score += 600
-                        w1.player.god = True
+                        w1.player.eats = True
                         strttime = time.time()
-                    if not pointloc[col][row] == 1:
+                    if not pointgrid[col][row] == 1:
                         w1.player.score += 200
-                    pointloc[col][row] = 1
+                    pointgrid[col][row] = 1
         if time.time() >  strttime + 5:
             colorswitch(ghosts, False, w1)
-        if w1.player.god:
+        if w1.player.eats:
             colorswitch(ghosts, True, w1)
-        if w1.player.slide == "lft" and x <= 10:
+        if w1.player.turn == "lft" and x <= 10:
             w1.player.xloc = 380
-        elif w1.player.slide == "rt" and x >= 370:
+        elif w1.player.turn == "rt" and x >= 370:
             w1.player.xloc = 0
-        if w1.player.slidenext in collide(surface, x, y):
-            w1.player = w1.player.move(w1.player.slidenext, size)
-            w1.player.slide = w1.player.slidenext
+        if w1.player.turnnext in collide(surface, x, y):
+            w1.player = w1.player.move(w1.player.turnnext, size)
+            w1.player.turn = w1.player.turnnext
         else:
-            w1.player = w1.player.move(w1.player.slide, size)
+            w1.player = w1.player.move(w1.player.turn, size)
         reps += 1
         if reps % 3 == 0:
-            toggle = not toggle
-        w1.player.draw(toggle, size, ghosts, pointloc)
+            mouth = not mouth
+        w1.player.draw(mouth, size, ghosts, pointgrid)
         screen.blit(surface, (0, 0))
         screen.blit(scoreboard, (0, 0))
         pygame.display.flip()
