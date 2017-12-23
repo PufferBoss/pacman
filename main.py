@@ -79,15 +79,13 @@ def window(size): # initialise screen
     surface = pygame.Surface(screen.get_size())
     w1 = Window(surface, Player(surface, size),Ghost(surface, 210, 250, (0, 255, 255)), Ghost(surface, 170, 210, (255, 0, 0)),
                 Ghost(surface, 210, 210, (255, 102, 255)), Ghost(surface, 170, 250, (255, 128, 0)), Map(surface))
-    reps = mouth = strttime = 0
+    mouth = strttime = 0
     pointgrid = w1.player.points(w1.map.rgbgrid)
     while True:    # main loop
         w1.map.__init__(surface)
         w1.map.drawmap()
         font = pygame.font.SysFont("franklingothicbook", int (size * 1.7))
         scoreboard = font.render("SCORE: " + str (w1.player.score), True, (255, 255, 255))
-        if reps == 6:
-            reps = 0
         for event in pygame.event.get():
             if event.type == QUIT:
                 sys.exit()
@@ -99,11 +97,11 @@ def window(size): # initialise screen
             for col in range(24):
                 if (x == row * size * 2 + 10) and (y == col * size * 2 + 10):
                     if pointgrid[col][row] == 2:
-                        w1.player.score += 600
+                        w1.player.score += 40
                         w1.player.eats = True
                         strttime = time.time()
                     if not pointgrid[col][row] == 1:
-                        w1.player.score += 100
+                        w1.player.score += 10
                     pointgrid[col][row] = 1
         if time.time() >  strttime + 5:
             colorswitch(ghosts, False, w1)
@@ -118,9 +116,7 @@ def window(size): # initialise screen
             w1.player.turn = w1.player.turnnext
         else:
             w1.player = w1.player.move(w1.player.turn, size)
-        reps += 1
-        if reps % 3 == 0:
-            mouth = not mouth
+        mouth = not mouth
         w1.player.draw(mouth, size, ghosts, pointgrid)
         screen.blit(surface, (0, 0))
         screen.blit(scoreboard, (0, 0))
