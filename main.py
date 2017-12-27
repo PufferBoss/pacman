@@ -32,7 +32,7 @@ def collide(surface, x, y):
     coordgrid = []
     for row in range(19):
         for col in range(24):
-            if rgbgrid[col][row] == (0, 0, 0) or rgbgrid[col][row] == (1, 1, 1) or rgbgrid[col][row] == (2, 2, 2):
+            if rgbgrid[col][row] ==  (0, 0, 0) or rgbgrid[col][row] == (1, 1, 1) or rgbgrid[col][row] == (2, 2, 2):
                 coord = [rectgrid[row][col].left, rectgrid[row][col].top]
                 coordgrid.append(coord)
     up = [x - 10, y - 30]
@@ -69,6 +69,8 @@ def keytype(keys, player):
         player.turnnext = "dn"
     if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
         player.turnnext = "rt"
+    if keys[pygame.K_0]:
+        print("(" + str(player.xloc) + "," + str(player.yloc) + ")")
     return player.turnnext
 
 

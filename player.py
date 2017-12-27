@@ -44,8 +44,8 @@ class Player:      #player class is pacman himself
         pinky = ghosts[2]
         clyde = ghosts[3]
 
-        x = self.xloc
-        y = self.yloc
+        x = x1 = x2 = self.xloc
+        y = y1 = y2 = self.yloc
         face = self.face
 
         if face == 1:
@@ -87,8 +87,10 @@ class Player:      #player class is pacman himself
         from main import collide
         y = self.yloc
         x = self.xloc
-
-        if direct in collide(self.surface, x, y):
+        size = int(size/2)
+        options = [collide(self.surface, x, y), collide(self.surface, x - 5, y), collide(self.surface, x, y - 5)
+            , collide(self.surface, x + 5, y), collide(self.surface, x, y + 5)]
+        if direct in options[0] or options[1] or options[2] or options[3] or options[4]:
             if direct == "up":
                 self.yloc = (y - size)
                 self.face = 1

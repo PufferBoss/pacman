@@ -47,3 +47,4 @@ class Map:
                 # draws the rects, data can not be collected
                 if type(self.rgbgrid[col][row]) == tuple:
                     pygame.draw.rect(self.surface, self.rgbgrid[col][row], self.rectgrid[row][col])
+                    #pygame.draw.rect(self.surface, (col * 10, row * 10, 100), self.rectgrid[row][col])
