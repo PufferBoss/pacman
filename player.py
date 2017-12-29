@@ -6,7 +6,8 @@ from ghost import Ghost
 
 class Player:      #player class is pacman himself
 
-    def __init__(self, surface, size, xloc=190, yloc=350, face=1, score = 0, eats=False, turn = 1, turnnext = 1):
+    def __init__(self, surface, size, xloc=190, yloc=350, face=1, score = 0,
+                 eats=False, turn = 1, turnnext = 1, color = (255, 255, 0)):
         self.xloc = xloc
         self.yloc = yloc
         self.face = face
@@ -16,12 +17,7 @@ class Player:      #player class is pacman himself
         self.turn = turn
         self.turnnext = turnnext
         self.size = size
-
-    def getScore(self):
-        return self.score
-
-    def setScore(self, obj):
-        self.score = obj
+        self.color = color
 
     def points(self, rgbgrid):
         x = self.xloc
@@ -75,7 +71,7 @@ class Player:      #player class is pacman himself
                     pygame.draw.rect(self.surface, (255, 255, 255), pointloc[col][row])
                 elif pointloc[col][row] == 2:
                     pygame.draw.circle(self.surface, (255, 255, 255), (row * 20 + 10, col * 20 + 10), 5)
-        pygame.draw.circle(self.surface, (255, 255, 0), (x, y), rad)  # draws circle
+        pygame.draw.circle(self.surface, self.color, (x, y), rad)  # draws circle
         if toggle:
             pygame.draw.polygon(self.surface, (0, 0, 0), [[x, y], [x1, y1], [x2, y2]])  # does it draw the triangle or not
         Ghost.drawghost(inky, rad)
