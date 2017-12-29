@@ -58,7 +58,7 @@ def window(size): # initialise screen
             scoreboard = font.render("SCORE: " + str(w1.player.score), True, (255, 255, 255))
         for event in pygame.event.get():
             w1.event(event)
-        x, y, ghosts, strttime = w1.player.xloc, w1.player.yloc, [w1.inky, w1.blinky, w1.pinky, w1.clyde]
+        x, y, ghosts = w1.player.xloc, w1.player.yloc, [w1.inky, w1.blinky, w1.pinky, w1.clyde]
         strttime = w1.map.scores(w1, pointgrid, strttime)
         if w1.player.score >= 1710:
             scoreboard, won = w1.endgame()
