@@ -72,7 +72,7 @@ def window(size): # initialise screen
     surface = pygame.Surface(screen.get_size())
     w1 = Window(surface, Player(surface, size),Ghost(surface, 210, 250, (0, 255, 255)), Ghost(surface, 170, 210, (255, 0, 0)),
                 Ghost(surface, 210, 210, (255, 102, 255)), Ghost(surface, 170, 250, (255, 128, 0)), Map(surface))
-    mouth = strttime = won = 0
+    scoreboard = mouth = strttime = won = 0
     pointgrid = w1.player.points(w1.map.rgbgrid)
     while True:    # main loop
         w1.map.__init__(surface)
