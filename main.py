@@ -6,13 +6,6 @@ from ghost import Ghost
 from window import Window
 from map import Map
 
-def endgame(window):
-    cover = pygame.rect.Rect(0, 0, 38 * size, 48 * size)
-    pygame.draw.rect(window.surface, (0, 0, 0), cover)
-    font = pygame.font.SysFont("franklingothicbook", int(size * 7))
-    scoreboard = font.render("YOU WON!", True, (255, 255, 255))
-    return scoreboard
-
 
 # returns array consisting of the possible movements the player can make
 def collide(surface, x, y):
@@ -48,23 +41,6 @@ def collide(surface, x, y):
     return works
 
 
-# finds the type of key that was pressed and assigns a function
-def keytype(keys, player):
-    if keys[pygame.K_w] or keys[pygame.K_UP]:
-        player.turnnext = "up"
-    if keys[pygame.K_a] or keys[pygame.K_LEFT]:
-        player.turnnext = "lft"
-    if keys[pygame.K_s] or keys[pygame.K_DOWN]:
-        player.turnnext = "dn"
-    if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
-        player.turnnext = "rt"
-    if keys[pygame.K_0]:
-        print("(" + str(player.xloc) + "," + str(player.yloc) + ")")
-    if keys[pygame.K_o]:
-        player.score += 1000
-    return player.turnnext
-
-
 def window(size): # initialise screen
     pygame.init()
     screen = pygame.display.set_mode((int(38 * size), 48 * size))
@@ -81,38 +57,17 @@ def window(size): # initialise screen
         if won == 0:
             scoreboard = font.render("SCORE: " + str(w1.player.score), True, (255, 255, 255))
         for event in pygame.event.get():
-            if event.type == QUIT:
-                sys.exit()
-            elif event.type == pygame.KEYDOWN:
-                keys = pygame.key.get_pressed()
-                w1.player.turnnext = keytype(keys, w1.player)
-        x, y, ghosts = w1.player.xloc, w1.player.yloc, [w1.inky, w1.blinky, w1.pinky, w1.clyde]
-        for row in range(19):
-            for col in range(24):
-                if (x == row * size * 2 + 10) and (y == col * size * 2 + 10):
-                    if pointgrid[col][row] == 2:
-                        w1.player.score += 40
-                        w1.player.eats = True
-                        strttime = time.time()
-                    if not pointgrid[col][row] == 1:
-                        w1.player.score += 10
-                    pointgrid[col][row] = 1
+            w1.event(event)
+        x, y, ghosts, strttime = w1.player.xloc, w1.player.yloc, [w1.inky, w1.blinky, w1.pinky, w1.clyde]
+        strttime = w1.map.scores(w1, pointgrid, strttime)
         if w1.player.score >= 1710:
-            scoreboard = endgame(w1)
+            scoreboard, won = w1.endgame()
             won = 1
-        if time.time() >  strttime + 5 and won == 0:
-            w1.switch_color(False, w1)
+        if time.time() > strttime + 5 and won == 0:
+            w1.switch_color(False)
         if w1.player.eats and won == 0:
-            w1.switch_color(True, w1)
-        if w1.player.turn == "lft" and x <= 10:
-            w1.player.xloc = 380
-        elif w1.player.turn == "rt" and x >= 370:
-            w1.player.xloc = 0
-        if w1.player.turnnext in collide(surface, x, y):
-            w1.player = w1.player.move(w1.player.turnnext, size)
-            w1.player.turn = w1.player.turnnext
-        else:
-            w1.player = w1.player.move(w1.player.turn, size)
+            w1.switch_color(True)
+        w1.action()
         mouth = not mouth
         if won == 0:
             w1.player.draw(mouth, size, ghosts, pointgrid)

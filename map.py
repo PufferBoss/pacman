@@ -48,3 +48,17 @@ class Map:
                 if type(self.rgbgrid[col][row]) == tuple:
                     pygame.draw.rect(self.surface, self.rgbgrid[col][row], self.rectgrid[row][col])
                     #pygame.draw.rect(self.surface, (col * 10, row * 10, 100), self.rectgrid[row][col])
+
+    def scores(self, window, pointgrid, strttime):
+        size = 10
+        for row in range(19):
+            for col in range(24):
+                if (window.player.xloc == row * size * 2 + 10) and (window.player.yloc == col * size * 2 + 10):
+                    if pointgrid[col][row] == 2:
+                        window.player.score += 40
+                        window.player.eats = True
+                        strttime = time.time()
+                    if not pointgrid[col][row] == 1:
+                        window.player.score += 10
+                    pointgrid[col][row] = 1
+        return strttime
