@@ -46,33 +46,33 @@ def window(size): # initialise screen
     screen = pygame.display.set_mode((int(38 * size), 48 * size))
     pygame.display.set_caption('PACMAN')
     surface = pygame.Surface(screen.get_size())
+    scrnsize = pygame.display.get_surface().get_size()
     w1 = Window(surface, Player(surface, size),Ghost(surface, 210, 250, (0, 255, 255)), Ghost(surface, 170, 210, (255, 0, 0)),
                 Ghost(surface, 210, 210, (255, 102, 255)), Ghost(surface, 170, 250, (255, 128, 0)), Map(surface))
     scoreboard = mouth = strttime = won = 0
     pointgrid = w1.player.points(w1.map.rgbgrid)
-    while True:    # main loop
+    # main loop
+    while True:
         w1.map.__init__(surface)
         w1.map.drawmap()
         font = pygame.font.SysFont("franklingothicbook", int(size * 1.7))
-        if won == 0:
-            scoreboard = font.render("SCORE: " + str(w1.player.score), True, (255, 255, 255))
         for event in pygame.event.get():
             w1.event(event)
         x, y, ghosts = w1.player.xloc, w1.player.yloc, [w1.inky, w1.blinky, w1.pinky, w1.clyde]
         strttime = w1.map.scores(w1, pointgrid, strttime)
         if w1.player.score >= 1710:
             scoreboard, won = w1.endgame()
-            won = 1
-        if time.time() > strttime + 5 and won == 0:
-            w1.switch_color(False)
-        if w1.player.eats and won == 0:
-            w1.switch_color(True)
         w1.action()
         mouth = not mouth
         if won == 0:
+            if w1.player.eats:
+                w1.switch_color(True)
+            if time.time() > strttime + 5:
+                w1.switch_color(False)
+            scoreboard = font.render("SCORE: " + str(w1.player.score), True, (255, 255, 255))
             w1.player.draw(mouth, size, ghosts, pointgrid)
         screen.blit(surface, (0, 0))
-        screen.blit(scoreboard, (won * 40, won * 190))
+        screen.blit(scoreboard, (won * scrnsize[0] / size * 2, won * scrnsize[1] / 2))
         pygame.display.flip()
 
 
