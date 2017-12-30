@@ -91,5 +91,5 @@ class Player:      #player class is pacman himself
             elif direct == "rt":
                 self.xloc = (x + size)
                 self.face = 4
-        time.sleep(0.02)
+        time.sleep(0.08)
         return self
