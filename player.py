@@ -19,21 +19,13 @@ class Player:      #player class is pacman himself
         self.size = size
         self.color = color
 
-    def points(self, rgbgrid):
-        x = self.xloc
-        y = self.yloc
-        pacdot = rgbgrid
+    def ate_all(self, pointgrid):
+        ate = True
         for row in range(19):
             for col in range(23):
-                if pacdot[col][row] == (0, 0, 0):
-                    pacdot[col][row] = pygame.rect.Rect(row * self.size * 2 + 10, col * self.size * 2 + 10, 3, 3)
-                    pygame.draw.rect(self.surface, (255, 255, 255), pacdot[col][row])
-                elif pacdot[col][row] == (2, 2, 2):
-                    pacdot[col][row] = 2
-                else:
-                    pacdot[col][row] = 1
-        return pacdot
-
+                if type(pointgrid[col][row]) != int and type(pointgrid[col][row]) != tuple:
+                    ate = False
+        return ate
     def draw(self, toggle, rad, ghosts, pointloc):
         inky = ghosts[0]
         blinky = ghosts[1]
@@ -99,5 +91,5 @@ class Player:      #player class is pacman himself
             elif direct == "rt":
                 self.xloc = (x + size)
                 self.face = 4
-        time.sleep(0.08)
+        time.sleep(0.02)
         return self

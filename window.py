@@ -56,7 +56,7 @@ class Window:
         cover = pygame.rect.Rect(0, 0, 38 * self.size, 48 * self.size)
         pygame.draw.rect(self.surface, (0, 0, 0), cover)
         font = pygame.font.SysFont("franklingothicbook", int(self.size * 7))
-        scoreboard = font.render("YOU WON!", True, (255, 255, 255))
+        scoreboard = font.render("YOU WON", True, (255, 255, 255))
         return scoreboard, 1
 
     def event(self, event):

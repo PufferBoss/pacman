@@ -50,7 +50,7 @@ def window(size): # initialise screen
     w1 = Window(surface, Player(surface, size),Ghost(surface, 210, 250, (0, 255, 255)), Ghost(surface, 170, 210, (255, 0, 0)),
                 Ghost(surface, 210, 210, (255, 102, 255)), Ghost(surface, 170, 250, (255, 128, 0)), Map(surface))
     scoreboard = mouth = strttime = won = 0
-    pointgrid = w1.player.points(w1.map.rgbgrid)
+    pointgrid = w1.map.points(w1)
     # main loop
     while True:
         w1.map.__init__(surface)
@@ -60,7 +60,7 @@ def window(size): # initialise screen
             w1.event(event)
         x, y, ghosts = w1.player.xloc, w1.player.yloc, [w1.inky, w1.blinky, w1.pinky, w1.clyde]
         strttime = w1.map.scores(w1, pointgrid, strttime)
-        if w1.player.score >= 1710:
+        if w1.player.ate_all(pointgrid):
             scoreboard, won = w1.endgame()
         w1.action()
         mouth = not mouth

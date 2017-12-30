@@ -62,3 +62,18 @@ class Map:
                         window.player.score += 10
                     pointgrid[col][row] = 1
         return strttime
+
+    def points(self, window):
+        x = window.player.xloc
+        y = window.player.yloc
+        pacdot = self.rgbgrid
+        for row in range(19):
+            for col in range(23):
+                if pacdot[col][row] == (0, 0, 0):
+                    pacdot[col][row] = pygame.rect.Rect(row * window.size * 2 + 10, col * window.size * 2 + 10, 3, 3)
+                    pygame.draw.rect(window.surface, (255, 255, 255), pacdot[col][row])
+                elif pacdot[col][row] == (2, 2, 2):
+                    pacdot[col][row] = 2
+                else:
+                    pacdot[col][row] = 1
+        return pacdot
