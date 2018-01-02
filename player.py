@@ -26,6 +26,7 @@ class Player:      #player class is pacman himself
                 if type(pointgrid[col][row]) != int and type(pointgrid[col][row]) != tuple:
                     ate = False
         return ate
+
     def draw(self, toggle, rad, ghosts, pointloc):
         inky = ghosts[0]
         blinky = ghosts[1]
@@ -64,8 +65,10 @@ class Player:      #player class is pacman himself
                 elif pointloc[col][row] == 2:
                     pygame.draw.circle(self.surface, (255, 255, 255), (row * 20 + 10, col * 20 + 10), 5)
         pygame.draw.circle(self.surface, self.color, (x, y), rad)  # draws circle
+
+        # draws the triangle or not
         if toggle:
-            pygame.draw.polygon(self.surface, (0, 0, 0), [[x, y], [x1, y1], [x2, y2]])  # does it draw the triangle or not
+            pygame.draw.polygon(self.surface, (0, 0, 0), [[x, y], [x1, y1], [x2, y2]])
         Ghost.drawghost(inky, rad)
         Ghost.drawghost(blinky, rad)
         Ghost.drawghost(pinky, rad)
