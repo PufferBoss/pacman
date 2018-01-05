@@ -53,10 +53,14 @@ class Window:
         return player.turnnext
 
     def endgame(self):
+        self.player.yloc = 10
         cover = pygame.rect.Rect(0, 0, 38 * self.size, 48 * self.size)
         pygame.draw.rect(self.surface, (0, 0, 0), cover)
-        font = pygame.font.SysFont("franklingothicbook", int(self.size * 7))
-        scoreboard = font.render("YOU WON", True, (255, 255, 255))
+        font = pygame.font.SysFont("franklingothicbook", int(self.size) * 5)
+        if not self.player.dead:
+            scoreboard = font.render("YOU WON, " + str(self.player.score), True, (255, 255, 255))
+        else:
+            scoreboard = font.render("YOU ARE DEAD", True, (255, 255, 255))
         return scoreboard, 1
 
     def event(self, event):
@@ -66,8 +70,9 @@ class Window:
             keys = pygame.key.get_pressed()
             self.player.turnnext = self.keytype(keys)
 
-    def action(self):
+    def action(self, ghosts):
         from main import collide
+
         if self.player.turn == "lft" and self.player.xloc <= 10:
             self.player.xloc = 380
         elif self.player.turn == "rt" and self.player.xloc >= 370:
@@ -77,3 +82,7 @@ class Window:
             self.player.turn = self.player.turnnext
         else:
             self.player = self.player.move(self.player.turn, self.size)
+        for i in range(4):
+            ghosts[i].ghost_touch(self.player)
+            ghosts[i] = ghosts[i].ghost_move(self.size)
+        return ghosts

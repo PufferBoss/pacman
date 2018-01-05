@@ -60,9 +60,9 @@ def window(size): # initialise screen
             w1.event(event)
         x, y, ghosts = w1.player.xloc, w1.player.yloc, [w1.inky, w1.blinky, w1.pinky, w1.clyde]
         strttime = w1.map.scores(w1, pointgrid, strttime)
-        if w1.player.ate_all(pointgrid):
+        if w1.player.ate_all(pointgrid) or w1.player.dead:
             scoreboard, won = w1.endgame()
-        w1.action()
+        ghosts = w1.action(ghosts)
         mouth = not mouth
         if won == 0:
             if w1.player.eats:
@@ -72,7 +72,7 @@ def window(size): # initialise screen
             scoreboard = font.render("SCORE: " + str(w1.player.score), True, (255, 255, 255))
             w1.player.draw(mouth, size, ghosts, pointgrid)
         screen.blit(surface, (0, 0))
-        screen.blit(scoreboard, (won * scrnsize[0] / size * 2, won * scrnsize[1] / 2))
+        screen.blit(scoreboard, (won * (10 + scrnsize[0] / size), won * scrnsize[1] / 4))
         pygame.display.flip()
 
 

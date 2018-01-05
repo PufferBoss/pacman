@@ -24,7 +24,7 @@ class Map:
                         [w, o, o, o, o, w, o, o, o, w, o, o, o, w, o, o, o, o, w],
                         [w, w, w, w, o, w, w, w, r, w, r, w, w, w, o, w, w, w, w],
                         [r, r, r, w, o, w, r, r, r, r, r, r, r, w, o, w, r, r, r],
-                        [r, r, r, w, o, w, r, w, w, t, w, w, r, w, o, w, r, r, r],
+                        [r, r, r, w, o, w, r, w, w, r, w, w, r, w, o, w, r, r, r],
                         [w, w, w, w, o, w, r, w, r, r, r, w, r, w, o, w, w, w, w],
                         [r, r, r, r, o, r, r, w, r, r, r, w, r, r, o, r, r, r, r],
                         [w, w, w, w, o, w, r, w, r, r, r, w, r, w, o, w, w, w, w],

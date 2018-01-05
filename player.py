@@ -7,7 +7,7 @@ from ghost import Ghost
 class Player:      #player class is pacman himself
 
     def __init__(self, surface, size, xloc=190, yloc=350, face=1, score=0,
-                 eats=False, turn=1, turnnext=1, color=(255, 255, 0)):
+                 eats=False, turn=1, turnnext=1, color=(255, 255, 0), dead = False):
         self.xloc = xloc
         self.yloc = yloc
         self.face = face
@@ -18,6 +18,8 @@ class Player:      #player class is pacman himself
         self.turnnext = turnnext
         self.size = size
         self.color = color
+        self.dead = dead
+
 
     def ate_all(self, pointgrid):
         ate = True
