@@ -32,7 +32,7 @@ class Ghost:
         pygame.draw.circle(self.surface, (0, 0, 0), (x + 3, y - 2), 1)
 
     def ghost_touch(self, player):
-        if player.xloc == self.xloc and player.yloc == self.yloc:
+        if player.xloc - 10 == self.xloc and player.yloc == self.yloc:
             if not player.eats:
                 player.dead = True
     def opposite(self, direct):
@@ -50,6 +50,7 @@ class Ghost:
         x = self.xloc
         size = int(size)
         options = [collide(self.surface, x, y)]
+        print(options)
         if self.face in options[0] and self.turns == options:
             direct = self.face
             options[0] = self.turns
@@ -71,4 +72,46 @@ class Ghost:
             self.xloc = (x - size)
         elif direct == "rt":
             self.xloc = (x + size)
+        return self
+
+    def ghost_path(self, player, size):
+        from main import collide
+        import cmath
+        size = int(size/5)
+        options = collide(self.surface, self.xloc, self.yloc)
+        closest = ["none", 999]
+        for turn in options:
+            if turn == "up":
+                a = (self.xloc - player.xloc)**2
+                b = ((self.yloc - 10) - player.yloc)**2
+            elif turn == "dn":
+                a = (self.xloc - player.xloc) ** 2
+                b = ((self.yloc + 10) - player.yloc) ** 2
+            elif turn == "lft":
+                a = ((self.xloc - 10) - player.xloc) ** 2
+                b = (self.yloc - player.yloc) ** 2
+            elif turn == "rt":
+                a = ((self.xloc + 10) - player.xloc) ** 2
+                b = (self.yloc - player.yloc) ** 2
+
+            length = cmath.sqrt(a + b).real
+            if self.color != (0, 0, 255):
+                if length <= closest[1]:
+                    closest[0] = turn
+                    closest[1] = length
+            else:
+                if length >= closest[1] or closest[1] == 999:
+                    closest[0] = turn
+                    closest[1] = length
+        print(closest[1])
+        direct = closest[0]
+        for i in range(5):
+            if direct == "up":
+                self.yloc = (self.yloc - size)
+            elif direct == "dn":
+                self.yloc = (self.yloc + size)
+            elif direct == "lft":
+                self.xloc = (self.xloc - size)
+            elif direct == "rt":
+                self.xloc = (self.xloc + size)
         return self
