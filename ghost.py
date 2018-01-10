@@ -5,13 +5,14 @@ import time
 
 class Ghost:
 
-    def __init__(self, surface, xloc=190, yloc=230, color=(255, 0, 0), face="up", turns=[]):
+    def __init__(self, surface, xloc=190, yloc=230, color=(255, 0, 0), face="up", turns=[], last=(0, 0)):
         self.xloc = xloc
         self.yloc = yloc
         self.color = color
         self.surface = surface
         self.face = face
         self.turns = turns
+        self.last = last
 
     def drawghost(self, size):
         x = self.xloc
@@ -35,6 +36,7 @@ class Ghost:
         if player.xloc == self.xloc and player.yloc == self.yloc:
             if not player.eats:
                 player.dead = True
+
     def opposite(self, direct):
         if direct == "up":
             return "dn"
@@ -44,6 +46,7 @@ class Ghost:
             return "rt"
         if direct == "rt":
             return "lft"
+
     def ghost_move(self, size):
         from main import collide
         y = self.yloc
@@ -79,6 +82,8 @@ class Ghost:
         import cmath
         size = int(size)
         options = collide(self.surface, self.xloc, self.yloc)
+        if self.opposite(self.face) in options:
+            options.remove(self.opposite(self.face))
         closest = ["none", 999]
         if options != self.turns:
             self.turns = options
@@ -114,4 +119,5 @@ class Ghost:
             self.xloc = (self.xloc - size)
         elif self.face == "rt":
             self.xloc = (self.xloc + size)
+        self.last = (self.xloc, self.yloc)
         return self
