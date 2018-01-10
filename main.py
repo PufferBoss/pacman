@@ -47,8 +47,8 @@ def window(size): # initialise screen
     pygame.display.set_caption('PACMAN')
     surface = pygame.Surface(screen.get_size())
     scrnsize = pygame.display.get_surface().get_size()
-    w1 = Window(surface, Player(surface, size),Ghost(surface, 210, 250, (0, 255, 255)), Ghost(surface, 170, 210, (255, 0, 0)),
-                Ghost(surface, 210, 210, (255, 102, 255)), Ghost(surface, 170, 250, (255, 128, 0)), Map(surface))
+    w1 = Window(surface, Player(surface, size),Ghost(surface, 210, 250, (0, 255, 255), "up"), Ghost(surface, 170, 210, (255, 0, 0), "up"),
+                Ghost(surface, 210, 210, (255, 102, 255), "up"), Ghost(surface, 170, 250, (255, 128, 0), "up"), Map(surface))
     scoreboard = mouth = strttime = won = 0
     pointgrid = w1.map.points(w1)
     # main loop
@@ -67,7 +67,7 @@ def window(size): # initialise screen
         if won == 0:
             if w1.player.eats:
                 w1.switch_color(True)
-            if time.time() > strttime + 5:
+            if time.time() > strttime + 8:
                 w1.switch_color(False)
             scoreboard = font.render("SCORE: " + str(w1.player.score), True, (255, 255, 255))
             w1.player.draw(mouth, size, ghosts, pointgrid)
