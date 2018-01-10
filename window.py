@@ -84,5 +84,10 @@ class Window:
             self.player = self.player.move(self.player.turn, self.size)
         for i in range(4):
             ghosts[i].ghost_touch(self.player)
-            ghosts[i] = ghosts[i].ghost_path(self.player, self.size)
+
+        ghosts[1] = ghosts[1].ghost_path(self.player, self.size)
+        ghosts[3] = ghosts[3].ghost_randpath(self.size)
+
+        ghosts[0] = ghosts[0].ghost_randpath(self.size)
+        ghosts[2] = ghosts[2].ghost_randpath(self.size)
         return ghosts

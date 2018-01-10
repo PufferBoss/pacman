@@ -77,6 +77,23 @@ class Ghost:
             self.xloc = (x + size)
         return self
 
+    def ghost_randpath(self, size):
+        from main import collide
+        size = int(size)
+        options = collide(self.surface, self.xloc, self.yloc)
+        if (self.opposite(self.face) in options) and (len(options) > 1):
+            options.remove(self.opposite(self.face))
+        self.face = random.choice(options)
+        if self.face == "up":
+            self.yloc = (self.yloc - size)
+        elif self.face == "dn":
+            self.yloc = (self.yloc + size)
+        elif self.face == "lft":
+            self.xloc = (self.xloc - size)
+        elif self.face == "rt":
+            self.xloc = (self.xloc + size)
+        return self
+
     def ghost_path(self, player, size):
         from main import collide
         import cmath
