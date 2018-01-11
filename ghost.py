@@ -87,7 +87,8 @@ class Ghost:
         options = collide(self.surface, self.xloc, self.yloc)
         if (self.opposite(self.face) in options) and (len(options) > 1):
             options.remove(self.opposite(self.face))
-        self.face = random.choice(options)
+        if len(options) != 0:
+            self.face = random.choice(options)
         if self.face == "up":
             self.yloc = (self.yloc - size)
         elif self.face == "dn":
