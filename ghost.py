@@ -36,6 +36,10 @@ class Ghost:
         if player.xloc == self.xloc and player.yloc == self.yloc:
             if not player.eats:
                 player.dead = True
+            else:
+                player.score += 250
+                self.xloc = 190
+                self.yloc = 230
 
     def opposite(self, direct):
         if direct == "up":
@@ -127,7 +131,6 @@ class Ghost:
                         closest[0] = turn
                         closest[1] = length
                 self.face = closest[0]
-        print(closest[1])
         if self.face == "up":
             self.yloc = (self.yloc - size)
         elif self.face == "dn":

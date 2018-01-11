@@ -1,4 +1,4 @@
-import pygame, sys
+import pygame, sys, random
 from pygame.locals import *
 import time
 from player import Player
@@ -87,7 +87,10 @@ class Window:
 
         ghosts[1] = ghosts[1].ghost_path(self.player, self.size)
         ghosts[3] = ghosts[3].ghost_randpath(self.size)
+        if random.randint(1, 50) < 25:
+            ghosts[0] = ghosts[0].ghost_randpath(self.size)
+        else:
+            ghosts[0] = ghosts[0].ghost_path(self.player, self.size)
 
-        ghosts[0] = ghosts[0].ghost_randpath(self.size)
-        ghosts[2] = ghosts[2].ghost_randpath(self.size)
+        #ghosts[2] = ghosts[2].ghost_randpath(self.size)
         return ghosts
