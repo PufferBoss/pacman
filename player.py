@@ -80,7 +80,9 @@ class Player:      #player class is pacman himself
         from main import collide
         y = self.yloc
         x = self.xloc
-        size = int(size/1)
+        size = int(size/2)
+        if self.eats:
+            size *= 2
         options = [collide(self.surface, x, y), collide(self.surface, x - 5, y), collide(self.surface, x, y - 5)
             , collide(self.surface, x + 5, y), collide(self.surface, x, y + 5)]
         if direct in options[0] or options[1] or options[2] or options[3] or options[4]:
