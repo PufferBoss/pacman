@@ -58,7 +58,7 @@ class Window:
         pygame.draw.rect(self.surface, (0, 0, 0), cover)
         font = pygame.font.SysFont("franklingothicbook", int(self.size) * 5)
         if not self.player.dead:
-            scoreboard = font.render("YOU WON, " + str(self.player.score), True, (255, 255, 255))
+            scoreboard = font.render("YOU WON," + str(self.player.score), True, (255, 255, 255))
         else:
             scoreboard = font.render("YOU ARE DEAD", True, (255, 255, 255))
         return scoreboard, 1
@@ -72,7 +72,6 @@ class Window:
 
     def action(self, ghosts):
         from main import collide
-
         if self.player.turn == "lft" and self.player.xloc <= 10:
             self.player.xloc = 380
         elif self.player.turn == "rt" and self.player.xloc >= 370:
@@ -84,6 +83,9 @@ class Window:
             self.player = self.player.move(self.player.turn, self.size)
         for i in range(4):
             ghosts[i].ghost_touch(self.player)
+            if ghosts[i].xloc <= 210 and ghosts[i].xloc >= 170 and ghosts[i].yloc <= 250 and ghosts[i].yloc >= 210:
+                ghosts[i].ghost_start(self.size)
+
 
         ghosts[1] = ghosts[1].ghost_path(self.player, self.size)
         ghosts[3] = ghosts[3].ghost_randpath(self.size)
@@ -92,5 +94,5 @@ class Window:
         else:
             ghosts[0] = ghosts[0].ghost_path(self.player, self.size)
 
-        #ghosts[2] = ghosts[2].ghost_randpath(self.size)
+        ghosts[2] = ghosts[2].ghost_randpath(self.size)
         return ghosts
