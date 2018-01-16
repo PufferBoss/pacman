@@ -33,7 +33,9 @@ class Ghost:
         pygame.draw.circle(self.surface, (0, 0, 0), (x + 3, y - 2), 1)
 
     def ghost_touch(self, player):
-        if player.xloc == self.xloc and player.yloc == self.yloc:
+        options = [(self.xloc, self.yloc), (self.xloc - 5, self.yloc), (self.xloc, self.yloc - 5)
+            , (self.xloc + 5, self.yloc), (self.xloc, self.yloc + 5)]
+        if (player.xloc, player.yloc) in options:
             if not player.eats:
                 player.dead = True
             else:
@@ -55,7 +57,7 @@ class Ghost:
         from main import collide
         y = self.yloc
         x = self.xloc
-        size = int(size)
+        size = int(size/2)
         options = [collide(self.surface, x, y)]
         print(options)
         if self.face in options[0] and self.turns == options:
@@ -81,9 +83,53 @@ class Ghost:
             self.xloc = (x + size)
         return self
 
+    def ghost_start(self, size):
+        from main import collide
+        import cmath
+        size = int(size / 2)
+        options = collide(self.surface, self.xloc, self.yloc)
+        if (self.opposite(self.face) in options) and (len(options) > 1):
+            options.remove(self.opposite(self.face))
+        closest = ["none", 999]
+        if options != self.turns:
+            self.turns = options
+            for turn in options:
+                if turn == "up":
+                    a = (self.xloc - 190) ** 2
+                    b = ((self.yloc - 10) - 170) ** 2
+                elif turn == "dn":
+                    a = (self.xloc - 190) ** 2
+                    b = ((self.yloc + 10) - 170) ** 2
+                elif turn == "lft":
+                    a = ((self.xloc - 10) - 190) ** 2
+                    b = (self.yloc - 170) ** 2
+                elif turn == "rt":
+                    a = ((self.xloc + 10) - 190) ** 2
+                    b = (self.yloc - 170) ** 2
+                length = cmath.sqrt(a + b).real
+                if self.color != (0, 0, 255):
+                    if length < closest[1]:
+                        closest[0] = turn
+                        closest[1] = length
+                else:
+                    if length > closest[1] or closest[1] == 999:
+                        closest[0] = turn
+                        closest[1] = length
+                self.face = closest[0]
+        if self.face == "up":
+            self.yloc = (self.yloc - size)
+        elif self.face == "dn":
+            self.yloc = (self.yloc + size)
+        elif self.face == "lft":
+            self.xloc = (self.xloc - size)
+        elif self.face == "rt":
+            self.xloc = (self.xloc + size)
+        self.last = (self.xloc, self.yloc)
+        return self
+
     def ghost_randpath(self, size):
         from main import collide
-        size = int(size)
+        size = int(size/2)
         options = collide(self.surface, self.xloc, self.yloc)
         if (self.opposite(self.face) in options) and (len(options) > 1):
             options.remove(self.opposite(self.face))
@@ -102,9 +148,9 @@ class Ghost:
     def ghost_path(self, player, size):
         from main import collide
         import cmath
-        size = int(size)
+        size = int(size/2)
         options = collide(self.surface, self.xloc, self.yloc)
-        if self.opposite(self.face) in options:
+        if (self.opposite(self.face) in options) and (len(options) > 1):
             options.remove(self.opposite(self.face))
         closest = ["none", 999]
         if options != self.turns:
