@@ -22,11 +22,11 @@ class Player:      #player class is pacman himself
 
 
     def ate_all(self, pointgrid):
-        ate = True
+        ate = 0
         for row in range(19):
             for col in range(23):
                 if type(pointgrid[col][row]) != int and type(pointgrid[col][row]) != tuple:
-                    ate = False
+                    ate += 1
         return ate
 
     def draw(self, toggle, rad, ghosts, pointloc):
