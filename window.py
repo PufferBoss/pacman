@@ -70,7 +70,7 @@ class Window:
             keys = pygame.key.get_pressed()
             self.player.turnnext = self.keytype(keys)
 
-    def action(self, ghosts):
+    def action(self, ghosts, pointgrid):
         from main import collide
         if self.player.turn == "lft" and self.player.xloc <= 10:
             self.player.xloc = 380
@@ -86,13 +86,15 @@ class Window:
             if ghosts[i].xloc <= 210 and ghosts[i].xloc >= 170 and ghosts[i].yloc <= 250 and ghosts[i].yloc >= 210:
                 ghosts[i].ghost_start(self.size)
 
-
-        ghosts[1] = ghosts[1].ghost_path(self.player, self.size)
         ghosts[3] = ghosts[3].ghost_randpath(self.size)
-        if random.randint(1, 50) < 25:
-            ghosts[0] = ghosts[0].ghost_randpath(self.size)
-        else:
-            ghosts[0] = ghosts[0].ghost_path(self.player, self.size)
+        if self.player.ate_all(pointgrid) <= 120:
+            ghosts[2] = ghosts[2].ghost_randpath(self.size)
+        if self.player.ate_all(pointgrid) <= 100:
+            if random.randint(1, 50) < 25:
+                ghosts[0] = ghosts[0].ghost_randpath(self.size)
+            else:
+                ghosts[0] = ghosts[0].ghost_path(self.player, self.size)
+        if self.player.ate_all(pointgrid) <= 75:
+            ghosts[1] = ghosts[1].ghost_path(self.player, self.size)
 
-        ghosts[2] = ghosts[2].ghost_randpath(self.size)
         return ghosts
