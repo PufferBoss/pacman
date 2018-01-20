@@ -60,9 +60,9 @@ def window(size): # initialise screen
             w1.event(event)
         x, y, ghosts = w1.player.xloc, w1.player.yloc, [w1.inky, w1.blinky, w1.pinky, w1.clyde]
         strttime = w1.map.scores(w1, pointgrid, strttime)
-        if w1.player.ate_all(pointgrid) or w1.player.dead:
+        if w1.player.ate_all(pointgrid) == 0 or w1.player.dead:
             scoreboard, won = w1.endgame()
-        ghosts = w1.action(ghosts)
+        ghosts = w1.action(ghosts, pointgrid)
         mouth = not mouth
         if won == 0:
             if w1.player.eats:
