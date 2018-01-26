@@ -5,7 +5,7 @@ import time
 
 class Ghost:
 
-    def __init__(self, surface, xloc=190, yloc=230, color=(255, 0, 0), face="up", turns=[], last=(0, 0)):
+    def __init__(self, surface, xloc=190, yloc=230, color=(255, 0, 0), face="up", turns=[], last=(0, 0), chase = False):
         self.xloc = xloc
         self.yloc = yloc
         self.color = color
@@ -13,6 +13,7 @@ class Ghost:
         self.face = face
         self.turns = turns
         self.last = last
+        self.chase = chase
 
     def drawghost(self, size):
         x = self.xloc
@@ -148,7 +149,7 @@ class Ghost:
     def ghost_path(self, player, size):
         from main import collide
         import cmath
-        size = int(size/2)
+        size, a, b = int(size/2), 0, 0
         options = collide(self.surface, self.xloc, self.yloc)
         if (self.opposite(self.face) in options) and (len(options) > 1):
             options.remove(self.opposite(self.face))
