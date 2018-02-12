@@ -81,14 +81,17 @@ class Window:
             self.player.turn = self.player.turnnext
         else:
             self.player = self.player.move(self.player.turn, self.size)
+        ghosts[3].chase = True
         for i in range(4):
             ghosts[i].ghost_touch(self.player)
             if 170 <= ghosts[i].xloc <= 210 and 210 <= ghosts[i].yloc <= 250 and ghosts[i].chase:
                 ghosts[i].ghost_start(self.size)
-        ghosts[3].chase = True
         ghosts[3] = ghosts[3].ghost_randpath(self.size)
         if self.player.ate_all(pointgrid) <= 120:
-            ghosts[2] = ghosts[2].ghost_randpath(self.size)
+            if random.randint(1, 50) < 25:
+                ghosts[2] = ghosts[2].ghost_randpath(self.size)
+            else:
+                ghosts[2] = ghosts[2].ghost_path(self.player, self.size)
             ghosts[2].chase = True
         if self.player.ate_all(pointgrid) <= 100:
             ghosts[0].chase = True
